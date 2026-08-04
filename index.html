@@ -1200,6 +1200,11 @@ function setView(name){
       void photo.offsetWidth;
       requestAnimationFrame(()=> photo.classList.add('show'));
     }
+    // view-about is display:none until now, so ScrollTrigger would have measured
+    // it at zero height on page load — recalc once it's actually laid out
+    if (window.ScrollTrigger) requestAnimationFrame(()=> ScrollTrigger.refresh());
+  } else if (window.ScrollTrigger){
+    requestAnimationFrame(()=> ScrollTrigger.refresh());
   }
 }
 function syncFromHash(){
@@ -1225,6 +1230,37 @@ document.getElementById('backToTop').addEventListener('click', ()=>{
 });
 </script>
 <script src="i18n.js"></script>
+
+<!-- ---------- ABOUT PHOTO: subtle scroll-linked tilt ---------- -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  if (!window.gsap || !window.ScrollTrigger) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const viewAbout = document.getElementById('view-about');
+  const aboutPhoto = document.getElementById('aboutPhoto');
+  if (!viewAbout || !aboutPhoto) return;
+
+  // the About view is short, static content (not a tall scroll-jacked hero like
+  // the project pages), so tie the tilt to the view's own full scroll range
+  // instead of "top bottom -> bottom top", which would already be mid-progress
+  // the moment the view opens
+  gsap.to(aboutPhoto, {
+    rotation: 8,
+    ease: 'none',
+    force3D: true,
+    scrollTrigger: {
+      trigger: viewAbout,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
