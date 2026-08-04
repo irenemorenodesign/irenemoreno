@@ -51,6 +51,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -409,10 +430,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -421,7 +447,7 @@
   <div class="hero-left reveal">
     <h1 class="hero-title">Verbena</h1>
     <div class="hero-meta"><strong>Editorial</strong><span>·</span><span>2024</span></div>
-    <p class="hero-desc">Verbena es una revista que nace de la necesidad de explorar la fiesta como fenómeno cultural y social. Hablamos de la fiesta no solo como entretenimiento, sino como expresión colectiva, como acto simbólico, como espacio de encuentro, libertad e identidad. Cada número gira en torno a un tema o un hilo conductor que nos permite profundizar, analizar y celebrar las diferentes formas de festividad. Proyecto colaborativo con Paula Arqué.</p>
+    <p class="hero-desc" data-i18n="verbena.desc">Verbena es una revista que nace de la necesidad de explorar la fiesta como fenómeno cultural y social. Hablamos de la fiesta no solo como entretenimiento, sino como expresión colectiva, como acto simbólico, como espacio de encuentro, libertad e identidad. Cada número gira en torno a un tema o un hilo conductor que nos permite profundizar, analizar y celebrar las diferentes formas de festividad. Proyecto colaborativo con Paula Arqué.</p>
   </div>
   <div class="hero-media reveal">
     <video autoplay muted loop playsinline poster="VERBENA/0425-poster.jpg">
@@ -436,7 +462,7 @@
 
 <!-- ---------- NARROW TEXT ---------- -->
 <section class="narrow-text reveal">
-  <p>Este primer número pone el foco en cuatro fiestas de carácter religioso muy arraigadas a la cultura. Fiestas que, con el paso del tiempo, han ido evolucionando y adquiriendo nuevos significados, a menudo alejados de su base espiritual inicial.</p>
+  <p data-i18n="verbena.narrow">Este primer número pone el foco en cuatro fiestas de carácter religioso muy arraigadas a la cultura. Fiestas que, con el paso del tiempo, han ido evolucionando y adquiriendo nuevos significados, a menudo alejados de su base espiritual inicial.</p>
 </section>
 
 <!-- ---------- MEDIA BLOCKS ---------- -->
@@ -447,13 +473,13 @@
   </div>
 
   <div class="hcarousel reveal">
-    <button class="hcarousel-arrow prev" aria-label="Anterior">&#8592;</button>
+    <button class="hcarousel-arrow prev" aria-label="Anterior" data-i18n-attr="aria-label:carousel.prev">&#8592;</button>
     <div class="hcarousel-viewport" id="hcarouselViewport">
       <div class="hcarousel-track" id="hcarouselTrack"></div>
     </div>
-    <button class="hcarousel-arrow next" aria-label="Siguiente">&#8594;</button>
+    <button class="hcarousel-arrow next" aria-label="Siguiente" data-i18n-attr="aria-label:carousel.next">&#8594;</button>
   </div>
-  <p class="block-caption" style="margin-top:32px;">El recorrido empieza con la Semana Santa de Sevilla, donde el silencio y la puesta en escena barroca crean una celebración llena de carga emocional. En Madrid, San Isidro mezcla devoción y tradición popular entre mantones y chulapos.</p>
+  <p class="block-caption" style="margin-top:32px;" data-i18n="verbena.caption1">El recorrido empieza con la Semana Santa de Sevilla, donde el silencio y la puesta en escena barroca crean una celebración llena de carga emocional. En Madrid, San Isidro mezcla devoción y tradición popular entre mantones y chulapos.</p>
 
   <div class="block-image reveal">
     <img src="VERBENA/j.png" alt="Mockup abierto de la revista Verbena">
@@ -463,7 +489,7 @@
 
 <!-- ---------- NEXT PROJECT ---------- -->
 <section class="next-project reveal">
-  <div class="np-label">Siguiente proyecto</div>
+  <div class="np-label" data-i18n="proj.nextProject">Siguiente proyecto</div>
   <a class="np-link" id="npLink" href="proyecto-calcot.html">
     <div class="np-preview"><img id="npImg" src="CALÇOT/PORTADA_PROYECTO.png" alt="Calçot Truck"></div>
     <div class="np-title">Calçot Truck — Branding</div>
@@ -479,10 +505,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -496,7 +522,7 @@
   }
 
   function colCountForWidth(w){
-    if (w <= 480) return 2;
+    if (w <= 480) return 3;
     if (w <= 700) return 3;
     if (w <= 1000) return 4;
     if (w <= 1400) return 5;
@@ -635,6 +661,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

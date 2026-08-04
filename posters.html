@@ -50,6 +50,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -223,10 +244,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -234,7 +260,7 @@
 <section class="gallery-hero">
   <div class="gh-left reveal">
     <h1 class="gh-title">Posters</h1>
-    <p class="gh-desc">Esta colección reúne una selección de pósters realizados tanto por iniciativa personal como por encargos profesionales. Los proyectos personales son un espacio de experimentación visual, mientras que los trabajos freelance responden a necesidades reales de comunicación, principalmente para la discoteca Cam Bernades, donde he desarrollado la identidad gráfica de diferentes eventos y campañas.</p>
+    <p class="gh-desc" data-i18n="posters.desc">Esta colección reúne una selección de pósters realizados tanto por iniciativa personal como por encargos profesionales. Los proyectos personales son un espacio de experimentación visual, mientras que los trabajos freelance responden a necesidades reales de comunicación, principalmente para la discoteca Cam Bernades, donde he desarrollado la identidad gráfica de diferentes eventos y campañas.</p>
   </div>
   <div class="gh-preview-wrap reveal">
     <div class="gh-preview">
@@ -258,10 +284,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -304,7 +330,6 @@
     item.addEventListener('mouseenter', ()=>{
       previewImg.classList.remove('show');
       setTimeout(()=>{ previewImg.src = p.src; previewImg.classList.add('show'); }, 120);
-      cursorLabel.textContent = 'Ver';
       cursorLabel.classList.add('show');
     });
     item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
@@ -348,6 +373,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

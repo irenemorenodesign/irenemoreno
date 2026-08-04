@@ -50,6 +50,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -282,10 +303,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -296,8 +322,8 @@
     <h1 class="hero-title">Calçot Truck</h1>
     <div class="hero-meta"><strong>Branding</strong><span>·</span><span>2026</span></div>
     <div class="hero-desc">
-      <p>Calçot Truck es una identidad visual para un concepto ficticio de street food que celebra la cultura catalana a través de una de sus tradiciones gastronómicas más emblemáticas: la calçotada. El proyecto reinterpreta este ritual popular en un contexto contemporáneo, acercando la identidad catalana a un público más amplio mediante un lenguaje gráfico desenfadado y actual.</p>
-      <p>La identidad toma como referencia la estética reconocible de los locales de kebab, reinterpretándola como un guiño visual a la cultura popular. A través de ilustraciones, una tipografía contundente y una paleta de colores vibrante, el proyecto crea un contraste entre el imaginario del fast food y la tradición catalana, dando lugar a una identidad cercana, divertida y con personalidad.</p>
+      <p data-i18n="calcot.desc1">Calçot Truck es una identidad visual para un concepto ficticio de street food que celebra la cultura catalana a través de una de sus tradiciones gastronómicas más emblemáticas: la calçotada. El proyecto reinterpreta este ritual popular en un contexto contemporáneo, acercando la identidad catalana a un público más amplio mediante un lenguaje gráfico desenfadado y actual.</p>
+      <p data-i18n="calcot.desc2">La identidad toma como referencia la estética reconocible de los locales de kebab, reinterpretándola como un guiño visual a la cultura popular. A través de ilustraciones, una tipografía contundente y una paleta de colores vibrante, el proyecto crea un contraste entre el imaginario del fast food y la tradición catalana, dando lugar a una identidad cercana, divertida y con personalidad.</p>
     </div>
   </div>
   <div class="hero-media reveal">
@@ -330,7 +356,7 @@
 
 <!-- ---------- NEXT PROJECT ---------- -->
 <section class="next-project reveal">
-  <div class="np-label">Siguiente proyecto</div>
+  <div class="np-label" data-i18n="proj.nextProject">Siguiente proyecto</div>
   <a class="np-link" id="npLink" href="proyecto-asantodeque.html">
     <div class="np-preview"><img id="npImg" src="TFG/ChatGPT Image 13 de juny del 2026, 19_37_16 1.png" alt="¿A Santo de Qué?"></div>
     <div class="np-title">¿A Santo de Qué? — Branding</div>
@@ -346,10 +372,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -390,6 +416,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

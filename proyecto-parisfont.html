@@ -50,6 +50,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -286,10 +307,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -299,8 +325,8 @@
     <h1 class="hero-title">Paris Font</h1>
     <div class="hero-meta">Editorial &middot; 2025</div>
     <div class="hero-desc">
-      <p>El proyecto parte de la creación de una tipografía inspirada en el modernismo, tomando como principal referencia algunos carteles de Cigarrillos París, donde destaca el marcado contraste del peso horizontal en las letras. A partir de este referente, el objetivo fue reinterpretar ese lenguaje visual desde una perspectiva contemporánea.</p>
-      <p>El resultado es una tipografía funcional y versátil, que mantiene un carácter ornamental y distintivo, aportando personalidad sin renunciar a la legibilidad. Proyecto colaborativo con Martina Fernández.</p>
+      <p data-i18n="parisfont.desc1">El proyecto parte de la creación de una tipografía inspirada en el modernismo, tomando como principal referencia algunos carteles de Cigarrillos París, donde destaca el marcado contraste del peso horizontal en las letras. A partir de este referente, el objetivo fue reinterpretar ese lenguaje visual desde una perspectiva contemporánea.</p>
+      <p data-i18n="parisfont.desc2">El resultado es una tipografía funcional y versátil, que mantiene un carácter ornamental y distintivo, aportando personalidad sin renunciar a la legibilidad. Proyecto colaborativo con Martina Fernández.</p>
     </div>
   </div>
   <div class="hero-media reveal">
@@ -315,7 +341,7 @@
 
 <!-- ---------- TEXTO FINAL ---------- -->
 <section class="narrow-text reveal">
-  <p>Más allá de recuperar rasgos formales del modernismo, el proyecto busca reinterpretar su esencia desde una perspectiva actual. Cada decisión de diseño responde a la intención de crear una tipografía con identidad propia, capaz de transmitir el carácter ornamental de la referencia original sin renunciar a la claridad, la versatilidad y la legibilidad en aplicaciones contemporáneas.</p>
+  <p data-i18n="parisfont.narrow">Más allá de recuperar rasgos formales del modernismo, el proyecto busca reinterpretar su esencia desde una perspectiva actual. Cada decisión de diseño responde a la intención de crear una tipografía con identidad propia, capaz de transmitir el carácter ornamental de la referencia original sin renunciar a la claridad, la versatilidad y la legibilidad en aplicaciones contemporáneas.</p>
 </section>
 
 <!-- ---------- VIDEO FINAL ---------- -->
@@ -342,10 +368,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -376,7 +402,6 @@
     img.loading = 'lazy';
     item.appendChild(img);
     item.addEventListener('mouseenter', ()=>{
-      cursorLabel.textContent = 'Ver';
       cursorLabel.classList.add('show');
     });
     item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
@@ -437,6 +462,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

@@ -50,6 +50,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -415,10 +436,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -429,8 +455,8 @@
     <h1 class="hero-title">¿A Santo de Qué?</h1>
     <div class="hero-meta"><strong>Branding</strong><span>·</span><span>TFG 2026</span></div>
     <div class="hero-desc">
-      <p>¿A santo de qué? es un proyecto de branding y packaging que pone en valor las fiestas populares de España como expresión de identidad, territorio y tradición. La colección reúne seis celebraciones —San Fermín, La Mercè, San Isidro, San Mateo, Sant Joan y El Pilar—, vinculando cada una con la denominación de origen correspondiente.</p>
-      <p>El proyecto parte de una reflexión sobre el origen de estas festividades: aunque hoy las vivimos como celebraciones colectivas, muchas nacen de la devoción a un santo o patrona. De esta idea surge el naming ¿A santo de qué?, una expresión popular que juega con ese doble significado y despierta la curiosidad por descubrir la historia detrás de cada fiesta. El vino actúa como vehículo conductor de la colección, reforzando el vínculo entre territorio, memoria y celebración colectiva.</p>
+      <p data-i18n="asantodeque.desc1">¿A santo de qué? es un proyecto de branding y packaging que pone en valor las fiestas populares de España como expresión de identidad, territorio y tradición. La colección reúne seis celebraciones —San Fermín, La Mercè, San Isidro, San Mateo, Sant Joan y El Pilar—, vinculando cada una con la denominación de origen correspondiente.</p>
+      <p data-i18n="asantodeque.desc2">El proyecto parte de una reflexión sobre el origen de estas festividades: aunque hoy las vivimos como celebraciones colectivas, muchas nacen de la devoción a un santo o patrona. De esta idea surge el naming ¿A santo de qué?, una expresión popular que juega con ese doble significado y despierta la curiosidad por descubrir la historia detrás de cada fiesta. El vino actúa como vehículo conductor de la colección, reforzando el vínculo entre territorio, memoria y celebración colectiva.</p>
     </div>
   </div>
   <div class="hero-media reveal">
@@ -447,7 +473,7 @@
 <!-- ---------- MAPA + TEXTO ---------- -->
 <section class="map-section">
   <div class="map-text reveal">
-    <p>Cada fiesta se vincula a un vino de su territorio, estableciendo una relación entre celebración, paisaje e identidad. Las seis referencias pertenecen a diferentes Denominaciones de Origen de España, convirtiendo al vino en el hilo conductor de la colección y en un símbolo del patrimonio cultural que comparten cada fiesta y su lugar de origen.</p>
+    <p data-i18n="asantodeque.mapText">Cada fiesta se vincula a un vino de su territorio, estableciendo una relación entre celebración, paisaje e identidad. Las seis referencias pertenecen a diferentes Denominaciones de Origen de España, convirtiendo al vino en el hilo conductor de la colección y en un símbolo del patrimonio cultural que comparten cada fiesta y su lugar de origen.</p>
   </div>
   <div class="map-wrap reveal">
     <img src="TFG/map-clean.png" alt="Mapa de España con las seis fiestas populares">
@@ -474,7 +500,7 @@
 
 <!-- ---------- CARRUSEL HORIZONTAL ---------- -->
 <div class="hcarousel reveal">
-  <button class="hcarousel-arrow prev" aria-label="Anterior">&#8592;</button>
+  <button class="hcarousel-arrow prev" aria-label="Anterior" data-i18n-attr="aria-label:carousel.prev">&#8592;</button>
   <div class="hcarousel-viewport" id="hcarouselViewport">
     <div class="hcarousel-track" id="hcarouselTrack">
       <div class="slide"><img src="TFG/Captura de pantalla 2026-08-04 a les 10.12.47.png" alt="Colocando las botellas en la caja ¿A Santo de Qué?" draggable="false"></div>
@@ -485,7 +511,7 @@
       <div class="slide"><img src="TFG/carousel-pareja.png" alt="Pareja con pañuelos sosteniendo botellas" draggable="false"></div>
     </div>
   </div>
-  <button class="hcarousel-arrow next" aria-label="Siguiente">&#8594;</button>
+  <button class="hcarousel-arrow next" aria-label="Siguiente" data-i18n-attr="aria-label:carousel.next">&#8594;</button>
 </div>
 
 <!-- ---------- GRID 2x3 ---------- -->
@@ -495,12 +521,12 @@
 
 <!-- ---------- TEXTO FINAL ---------- -->
 <section class="narrow-text reveal">
-  <p>La identidad se materializa en una colección de seis etiquetas ilustradas, donde cada diseño representa los símbolos más característicos de su fiesta mediante un lenguaje gráfico contemporáneo. El sistema se extiende a estampas coleccionables dedicadas a cada santo y a un packaging compuesto por cajas individuales y una caja de colección, compartiendo todos los soportes un mismo lenguaje visual.</p>
+  <p data-i18n="asantodeque.narrow">La identidad se materializa en una colección de seis etiquetas ilustradas, donde cada diseño representa los símbolos más característicos de su fiesta mediante un lenguaje gráfico contemporáneo. El sistema se extiende a estampas coleccionables dedicadas a cada santo y a un packaging compuesto por cajas individuales y una caja de colección, compartiendo todos los soportes un mismo lenguaje visual.</p>
 </section>
 
 <!-- ---------- SELECTOR DE ANIMACIONES ---------- -->
 <section class="anim-section reveal">
-  <div class="anim-label">Animaciones</div>
+  <div class="anim-label" data-i18n="asantodeque.animLabel">Animaciones</div>
   <div class="anim-wrap" id="animWrap">
     <video class="active" muted loop playsinline autoplay poster="TFG/anim1-poster.jpg">
       <source src="TFG/irene4.mp4" type="video/mp4">
@@ -508,8 +534,8 @@
     <video muted loop playsinline poster="TFG/anim2-poster.jpg">
       <source src="TFG/tot2___1 (1).mp4" type="video/mp4">
     </video>
-    <button class="anim-arrow prev" aria-label="Animación anterior">&#8592;</button>
-    <button class="anim-arrow next" aria-label="Animación siguiente">&#8594;</button>
+    <button class="anim-arrow prev" aria-label="Animación anterior" data-i18n-attr="aria-label:anim.prev">&#8592;</button>
+    <button class="anim-arrow next" aria-label="Animación siguiente" data-i18n-attr="aria-label:anim.next">&#8594;</button>
   </div>
   <div class="anim-dots" id="animDots">
     <button class="active" data-i="0" aria-label="Animación 1"></button>
@@ -519,7 +545,7 @@
 
 <!-- ---------- NEXT PROJECT ---------- -->
 <section class="next-project reveal">
-  <div class="np-label">Siguiente proyecto</div>
+  <div class="np-label" data-i18n="proj.nextProject">Siguiente proyecto</div>
   <a class="np-link" id="npLink" href="proyecto-transit.html">
     <div class="np-preview"><img id="npImg" src="TRANSIT/TRANSIT_PORTADA.png" alt="Transit Festival"></div>
     <div class="np-title">Transit Festival — Branding</div>
@@ -535,10 +561,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -549,7 +575,7 @@
     cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
   });
   document.querySelectorAll('.hero-media, .full-block, .hcarousel-track .slide').forEach(el=>{
-    el.addEventListener('mouseenter', ()=>{ cursorLabel.textContent = 'Ver'; cursorLabel.classList.add('show'); });
+    el.addEventListener('mouseenter', ()=>{ cursorLabel.classList.add('show'); });
     el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
   });
 
@@ -630,6 +656,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

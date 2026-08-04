@@ -56,6 +56,27 @@
   .site-nav a.active{ opacity:1; font-weight:600; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- HERO ---------- */
   .hero{
     height:340vh;
@@ -609,10 +630,15 @@
 <body>
 
 <nav class="site-nav" id="siteNav">
-  <a href="#home" class="brand">[ Home ]</a>
+  <a href="#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="#about" data-nav="about">About</a>
-    <a href="#work" data-nav="work">Work</a>
+    <a href="#about" data-nav="about" data-i18n="nav.about">Sobre mí</a>
+    <a href="#work" data-nav="work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -625,7 +651,7 @@
       <span class="sub">Branding · Editorial · Motion</span>
     </div>
     <div class="proj-label">
-      <span class="eyebrow">Proyectos seleccionados</span>
+      <span class="eyebrow" data-i18n="home.eyebrow">Proyectos seleccionados</span>
       <span class="count">01 — 06</span>
     </div>
     <a class="scrap" href="proyecto-calcot.html" style="width:189px; height:180px; background-image:url('PORTADAS PROYECTOS/CALÇOTTRUCK_PORTADA.png'); background-size:contain;">
@@ -646,13 +672,13 @@
     <a class="scrap" href="posters.html" style="width:141px; height:200px; background-image:url('PORTADAS PROYECTOS/POSTERS_PORTADA.png'); background-size:contain;">
       <div class="scrap-cap"><span class="cat">Posters</span>Elige tu propia aventura</div>
     </a>
-    <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
+    <div class="scroll-hint"><span data-i18n="home.scroll">Desplázate</span><span class="line"></span></div>
   </div>
 </section>
 
 <section class="grid-section">
   <div class="grid-header">
-    <a href="#work" class="count" style="color:inherit; text-decoration:none;">Ver todos los proyectos →</a>
+    <a href="#work" class="count" style="color:inherit; text-decoration:none;"><span data-i18n="home.viewAll">Ver todos los proyectos</span> →</a>
   </div>
 </section>
 
@@ -661,13 +687,13 @@
 <div id="view-work">
 <div class="page">
   <div class="eyebrow">
-    <span>Work</span>
-    <span>Projects</span>
+    <span data-i18n="nav.work">Trabajo</span>
+    <span data-i18n="work.eyebrowProjects">Proyectos</span>
   </div>
 
   <div class="cats-wrap">
     <ul class="cats" id="cats">
-      <li data-cat="ALL" class="emph">ALL</li>
+      <li data-cat="ALL" class="emph" data-i18n="work.all">TODOS</li>
       <li data-cat="BRANDING">BRANDING</li>
       <li data-cat="EDITORIAL">EDITORIAL</li>
       <li data-cat="MOTION">MOTION</li>
@@ -681,7 +707,7 @@
   </div>
 </div>
 
-<div class="cursor-label" id="cursorLabel">Ver proyecto</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="work.viewProject">Ver proyecto</div>
 
 <div class="project-overlay" id="projectOverlay">
   <div class="overlay-img-wrap" id="overlayImgWrap"><img id="overlayImg" src="" alt=""></div>
@@ -689,19 +715,19 @@
     <h2 id="overlayTitle"></h2>
     <span id="overlayCat"></span>
   </div>
-  <button class="overlay-close" id="overlayClose">Cerrar ×</button>
+  <button class="overlay-close" id="overlayClose"><span data-i18n="work.close">Cerrar</span> ×</button>
 </div>
 </div>
 
 <div id="view-about">
 <div class="about-page">
-  <h1 class="about-title">About</h1>
+  <h1 class="about-title" data-i18n="nav.about">Sobre mí</h1>
 
   <div class="about-hero">
     <div class="about-intro">
-      <p class="about-name"><strong>Irene Moreno — Graphic Designer</strong></p>
-      <p>Soy diseñadora gráfica en Barcelona, enfocada en branding, diseño editorial, packaging y motion.</p>
-      <p>Creo que el diseño es una forma de contar historias, de crear experiencias con sentido y de conectar con las personas. Disfruto transformando ideas en identidades visuales claras, cuidadas y memorables.</p>
+      <p class="about-name"><strong>Irene Moreno — <span data-i18n="about.role">Diseñadora Gráfica</span></strong></p>
+      <p data-i18n="about.introP1">Soy diseñadora gráfica en Barcelona, enfocada en branding, diseño editorial, packaging y motion.</p>
+      <p data-i18n="about.introP2">Creo que el diseño es una forma de contar historias, de crear experiencias con sentido y de conectar con las personas. Disfruto transformando ideas en identidades visuales claras, cuidadas y memorables.</p>
     </div>
     <div class="about-photo-wrap">
       <div class="about-photo" id="aboutPhoto"></div>
@@ -710,35 +736,35 @@
 
   <div class="about-columns">
     <div class="about-col">
-      <h3>Contacto</h3>
+      <h3 data-i18n="about.contact">Contacto</h3>
       <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
       <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
       <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
     </div>
     <div class="about-col">
-      <h3>Experiencia profesional</h3>
+      <h3 data-i18n="about.experience">Experiencia profesional</h3>
       <div class="about-entry">
-        <a href="https://www.wearefirma.com/es" target="_blank" rel="noopener"><strong>FIRMA, Motion Designer</strong></a>
-        <span>2026 — Presente</span>
+        <a href="https://www.wearefirma.com/es" target="_blank" rel="noopener"><strong>FIRMA, <span data-i18n="job.motion">Diseñadora de Motion</span></strong></a>
+        <span>2026 — <span data-i18n="about.present">Presente</span></span>
       </div>
       <div class="about-entry">
-        <a href="https://theothers.tv/" target="_blank" rel="noopener"><strong>The Others, Graphic Designer</strong></a>
+        <a href="https://theothers.tv/" target="_blank" rel="noopener"><strong>The Others, <span data-i18n="about.role">Diseñadora Gráfica</span></strong></a>
         <span>2025 — 2026</span>
       </div>
       <div class="about-entry">
-        <a href="https://summa.es/" target="_blank" rel="noopener"><strong>Summa Branding, Graphic Designer</strong></a>
+        <a href="https://summa.es/" target="_blank" rel="noopener"><strong>Summa Branding, <span data-i18n="about.role">Diseñadora Gráfica</span></strong></a>
         <span>2025</span>
       </div>
     </div>
     <div class="about-col">
-      <h3>Formación</h3>
+      <h3 data-i18n="about.education">Formación</h3>
       <div class="about-entry">
         <strong>EINA Centro Universitario de Diseny i Art de Barcelona (UAB)</strong>
         <span>Grau en Disseny Gràfic, 2022-2026</span>
       </div>
     </div>
     <div class="about-col">
-      <h3>Skills</h3>
+      <h3 data-i18n="about.skills">Skills</h3>
       <span>Adobe Illustrator</span>
       <span>After Effects</span>
       <span>Adobe Photoshop</span>
@@ -756,7 +782,7 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
 <script>
@@ -770,17 +796,19 @@
 
   // Per-piece choreography, one entry per .scrap in DOM order.
   // "chaos": where it lands when it converges into the pile below the headline.
-  // "grid": where it settles once it "orders itself" into the final projects grid.
+  // "grid": where it settles once it "orders itself" into the final projects grid (desktop: 3 cols x 2 rows).
+  // "gridMobile": same settle order, re-flowed into 2 cols x 3 rows so cards stay legible on a narrow phone.
   const pieces = [
-    { chaos:{x:-9, y:-9, rot:-12}, grid:{col:-1, row:-0.5}, startMul:5 },
-    { chaos:{x:7,  y:-5, rot:9},   grid:{col:0,  row:-0.5}, startMul:4.2 },
-    { chaos:{x:-8, y:7,  rot:14},  grid:{col:1,  row:-0.5}, startMul:4.8 },
-    { chaos:{x:8,  y:8,  rot:-9},  grid:{col:-1, row:0.5},  startMul:4.4 },
-    { chaos:{x:0,  y:-10,rot:-6},  grid:{col:0,  row:0.5},  startMul:5.4 },
-    { chaos:{x:1,  y:9,  rot:11},  grid:{col:1,  row:0.5},  startMul:4.6 },
+    { chaos:{x:-9, y:-9, rot:-12}, grid:{col:-1, row:-0.5}, gridMobile:{col:-0.5, row:-1}, startMul:5 },
+    { chaos:{x:7,  y:-5, rot:9},   grid:{col:0,  row:-0.5}, gridMobile:{col:0.5,  row:-1}, startMul:4.2 },
+    { chaos:{x:-8, y:7,  rot:14},  grid:{col:1,  row:-0.5}, gridMobile:{col:-0.5, row:0},  startMul:4.8 },
+    { chaos:{x:8,  y:8,  rot:-9},  grid:{col:-1, row:0.5},  gridMobile:{col:0.5,  row:0},  startMul:4.4 },
+    { chaos:{x:0,  y:-10,rot:-6},  grid:{col:0,  row:0.5},  gridMobile:{col:-0.5, row:1},  startMul:5.4 },
+    { chaos:{x:1,  y:9,  rot:11},  grid:{col:1,  row:0.5},  gridMobile:{col:0.5,  row:1},  startMul:4.6 },
   ];
 
   const COL_W = 30;   // vw between grid columns — wide enough that cards keep a clear margin
+  const COL_W_MOBILE = 46; // vw between the 2 mobile columns — wider since there are only 2 of them
   const ROW_H = 40;   // vh between grid rows — enough that captions never cover the row below
   const GRID_Y_SHIFT = 8;  // vh — nudge the final grid down, but keep the bottom row's captions inside the viewport
 
@@ -815,19 +843,26 @@
     // so shrink them enough that the same column pitch (in vw) keeps every
     // column fully on-screen instead of running off the left/right edge
     const isMobile = window.innerWidth < 700;
-    const mobileScale = isMobile ? 0.45 : 1;
-    const colW = COL_W;
+    // 2 cols x 3 rows on mobile instead of 3 x 2, so cards get more room per column
+    const mobileScale = isMobile ? 0.56 : 1;
+    const colW = isMobile ? COL_W_MOBILE : COL_W;
+    // 40vh of row spacing reads fine on a wide, short desktop viewport, but on a
+    // tall narrow phone (now with an extra row, since mobile is 2x3 not 3x2) it
+    // leaves a huge dead gap between rows if left as-is — tighten it, but leave
+    // enough that a row's caption never runs into the row below
+    const rowH = isMobile ? 25 : ROW_H;
 
     scraps.forEach((el, i)=>{
       const p = pieces[i];
+      const grid = isMobile ? p.gridMobile : p.grid;
       const cap = el.querySelector('.scrap-cap');
 
       const chaosX = p.chaos.x * (1 + (1-entrance) * p.startMul);
       const chaosY = p.chaos.y * (1 + (1-entrance) * p.startMul);
       const chaosRot = p.chaos.rot * (1 + (1-entrance) * 0.6);
 
-      const gridX = p.grid.col * colW;
-      const gridY = p.grid.row * ROW_H + GRID_Y_SHIFT;
+      const gridX = grid.col * colW;
+      const gridY = grid.row * rowH + GRID_Y_SHIFT;
 
       const x = chaosX + (gridX - chaosX) * settle;
       const y = chaosY + (gridY - chaosY) * settle;
@@ -1181,6 +1216,7 @@ document.getElementById('backToTop').addEventListener('click', ()=>{
   window.scrollTo({ top:0, behavior:'smooth' });
 });
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>

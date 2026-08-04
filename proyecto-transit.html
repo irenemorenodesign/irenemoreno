@@ -50,6 +50,27 @@
   .site-nav a:hover{ opacity:1; }
   .site-nav .nav-links{ display:flex; gap:28px; }
 
+  /* ---------- LANGUAGE SWITCH (sits just under the Home link) ---------- */
+  .lang-switch{
+    position:absolute;
+    top:100%; left:40px;
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:0.06em;
+  }
+  .lang-switch button{
+    background:none; border:none; padding:0; margin:0;
+    font:inherit; color:inherit;
+    opacity:0.5;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:opacity 0.2s ease;
+  }
+  .lang-switch button:hover{ opacity:0.8; }
+  .lang-switch button.active{ opacity:1; font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+
   /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;
@@ -324,10 +345,15 @@
 <body>
 
 <nav class="site-nav">
-  <a href="index.html#home" class="brand">[ Home ]</a>
+  <a href="index.html#home" class="brand">[ <span data-i18n="nav.home">Inicio</span> ]</a>
   <div class="nav-links">
-    <a href="index.html#about">About</a>
-    <a href="index.html#work">Work</a>
+    <a href="index.html#about" data-i18n="nav.about">Sobre mí</a>
+    <a href="index.html#work" data-i18n="nav.work">Trabajo</a>
+  </div>
+  <div class="lang-switch" id="langSwitch">
+    <button type="button" data-lang="CAT">CAT</button>
+    <button type="button" data-lang="ENG">ENG</button>
+    <button type="button" data-lang="ESP">ESP</button>
   </div>
 </nav>
 
@@ -338,7 +364,7 @@
     <h1 class="hero-title">Transit Festival</h1>
     <div class="hero-meta">Branding &middot; 2026</div>
     <div class="hero-desc">
-      <p>Transit es la identidad visual de un festival ficticio que explora el concepto del tránsito humano como punto de encuentro entre personas, culturas y disciplinas artísticas. El proyecto traslada esta idea a la música, el arte y la gastronomía, que se convierten en espacios de conexión e intercambio. La identidad se construye a partir de un sistema gráfico flexible y adaptable, diseñado para funcionar de forma coherente en todos los soportes del festival. El uso de una tipografía de gran impacto, una paleta cromática vibrante y composiciones dinámicas refuerzan la sensación de movimiento y energía, dando lugar a una identidad contemporánea, reconocible y versátil aplicada a cartelería, señalética, merchandising, plataformas digitales e intervenciones urbanas. Proyecto colaborativo con Martina Fernández.</p>
+      <p data-i18n="transit.desc">Transit es la identidad visual de un festival ficticio que explora el concepto del tránsito humano como punto de encuentro entre personas, culturas y disciplinas artísticas. El proyecto traslada esta idea a la música, el arte y la gastronomía, que se convierten en espacios de conexión e intercambio. La identidad se construye a partir de un sistema gráfico flexible y adaptable, diseñado para funcionar de forma coherente en todos los soportes del festival. El uso de una tipografía de gran impacto, una paleta cromática vibrante y composiciones dinámicas refuerzan la sensación de movimiento y energía, dando lugar a una identidad contemporánea, reconocible y versátil aplicada a cartelería, señalética, merchandising, plataformas digitales e intervenciones urbanas. Proyecto colaborativo con Martina Fernández.</p>
     </div>
   </div>
   <div class="hero-media reveal">
@@ -400,7 +426,7 @@
 
 <!-- ---------- NEXT PROJECT ---------- -->
 <section class="next-project reveal">
-  <div class="np-label">Siguiente proyecto</div>
+  <div class="np-label" data-i18n="proj.nextProject">Siguiente proyecto</div>
   <a class="np-link" id="npLink" href="proyecto-verbena.html">
     <div class="np-preview"><img id="npImg" src="VERBENA/portada.png" alt="Verbena"></div>
     <div class="np-title">Verbena — Editorial</div>
@@ -416,10 +442,10 @@
     <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
     <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
   </div>
-  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel">Ver</div>
+<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
 <script>
 (function(){
@@ -429,7 +455,7 @@
     cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
   });
   document.querySelectorAll('.card-item, .ticket-wrap, .ig-post, .map-shot, .photo-item').forEach(el=>{
-    el.addEventListener('mouseenter', ()=>{ cursorLabel.textContent = 'Ver'; cursorLabel.classList.add('show'); });
+    el.addEventListener('mouseenter', ()=>{ cursorLabel.classList.add('show'); });
     el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
   });
 
@@ -482,6 +508,7 @@
   });
 })();
 </script>
+<script src="i18n.js"></script>
 
 </body>
 </html>
