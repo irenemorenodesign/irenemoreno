@@ -146,16 +146,16 @@
   }
   .cursor-label.show{ opacity:1; }
 
-  /* ---------- MOTION GRID (grouped by orientation, uniform cells, nothing cropped) ---------- */
-  .motion-groups{ max-width:1600px; margin:0 auto; padding:0 64px 160px; }
+  /* ---------- MOTION GRID (single grid, original order, uniform cells, nothing cropped) ---------- */
   .motion-grid{
     display:grid;
+    grid-template-columns:repeat(3,1fr);
     align-items:start;
     gap:28px;
+    max-width:1600px;
+    margin:0 auto;
+    padding:0 64px 160px;
   }
-  .motion-grid + .motion-grid{ margin-top:28px; }
-  .motion-grid-vertical{ grid-template-columns:repeat(3,1fr); }
-  .motion-grid-horizontal{ grid-template-columns:repeat(2,1fr); }
   .motion-item{
     position:relative;
     overflow:hidden;
@@ -169,11 +169,7 @@
   .motion-item:hover video{ transform:scale(1.04); }
 
   @media (max-width:700px){
-    .motion-groups{ padding:20px 20px 100px; }
-    .motion-grid{ gap:12px; }
-    .motion-grid + .motion-grid{ margin-top:12px; }
-    .motion-grid-vertical{ grid-template-columns:repeat(2,1fr); }
-    .motion-grid-horizontal{ grid-template-columns:repeat(2,1fr); }
+    .motion-grid{ grid-template-columns:repeat(2,1fr); padding:20px 20px 100px; gap:12px; }
   }
 
   /* ---------- LIGHTBOX ---------- */
@@ -271,10 +267,7 @@
 </section>
 
 <!-- ---------- GALLERY ---------- -->
-<div class="motion-groups">
-  <section class="motion-grid motion-grid-vertical" id="motionGridVertical"></section>
-  <section class="motion-grid motion-grid-horizontal" id="motionGridHorizontal"></section>
-</div>
+<section class="motion-grid" id="motionGrid"></section>
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose">&#10005;</button>
@@ -306,8 +299,7 @@
     { src:"MOTION/Comp 17 (1).mp4",         poster:"MOTION/poster-comp17.jpg",     title:"Comp 17" },
   ];
 
-  const gridVertical = document.getElementById('motionGridVertical');
-  const gridHorizontal = document.getElementById('motionGridHorizontal');
+  const grid = document.getElementById('motionGrid');
   const previewVideo = document.getElementById('ghPreviewVideo');
   const cursorLabel = document.getElementById('cursorLabel');
   const observer = new IntersectionObserver((entries)=>{
@@ -319,44 +311,31 @@
     });
   }, { threshold: 0.1 });
 
-  // Probe each clip's real dimensions first, so verticals and horizontals can be
-  // grouped into their own grids instead of mixing wildly different aspect ratios.
-  Promise.all(videos.map(v=>{
-    return new Promise(resolve=>{
-      const probe = document.createElement('video');
-      probe.preload = 'metadata';
-      probe.muted = true;
-      probe.onloadedmetadata = ()=> resolve({ v, portrait: probe.videoHeight >= probe.videoWidth });
-      probe.onerror = ()=> resolve({ v, portrait: false });
-      probe.src = v.src;
+  videos.forEach(v=>{
+    const item = document.createElement('div');
+    item.className = 'motion-item reveal';
+    const video = document.createElement('video');
+    video.src = v.src;
+    video.poster = v.poster;
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('aria-label', v.title);
+    item.appendChild(video);
+    item.addEventListener('mouseenter', ()=>{
+      previewVideo.classList.remove('show');
+      setTimeout(()=>{
+        previewVideo.src = v.src;
+        previewVideo.play();
+        previewVideo.classList.add('show');
+      }, 120);
+      cursorLabel.classList.add('show');
     });
-  })).then(results=>{
-    results.forEach(({ v, portrait })=>{
-      const item = document.createElement('div');
-      item.className = 'motion-item reveal';
-      const video = document.createElement('video');
-      video.src = v.src;
-      video.poster = v.poster;
-      video.autoplay = true;
-      video.muted = true;
-      video.loop = true;
-      video.playsInline = true;
-      video.setAttribute('aria-label', v.title);
-      item.appendChild(video);
-      item.addEventListener('mouseenter', ()=>{
-        previewVideo.classList.remove('show');
-        setTimeout(()=>{
-          previewVideo.src = v.src;
-          previewVideo.play();
-          previewVideo.classList.add('show');
-        }, 120);
-        cursorLabel.classList.add('show');
-      });
-      item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
-      item.addEventListener('click', ()=> openLightbox(v));
-      (portrait ? gridVertical : gridHorizontal).appendChild(item);
-      observer.observe(item);
-    });
+    item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+    item.addEventListener('click', ()=> openLightbox(v));
+    grid.appendChild(item);
+    observer.observe(item);
   });
 
   document.addEventListener('mousemove', e=>{
