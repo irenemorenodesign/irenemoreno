@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calçot Truck — Irene Moreno</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#0B0B0C;
+    --paper:#FFFFFF;
+    --cobalt:#2643F2;
+    --gray:#8A8880;
+    --line:#E7E6E1;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+
+    /* ---------- NAV ---------- */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 40px;
+    z-index:500;
+    mix-blend-mode:difference;
+    color:#fff;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .site-nav a{ color:inherit; text-decoration:none; opacity:0.9; transition:opacity 0.2s ease; }
+  .site-nav a:hover{ opacity:1; }
+  .site-nav .nav-links{ display:flex; gap:28px; }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.8s cubic-bezier(.22,.8,.32,1), transform 0.9s cubic-bezier(.22,.8,.32,1);
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero-bg{
+    background:#FEE100;
+  }
+  .proj-hero{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:72px;
+    align-items:center;
+    max-width:1500px;
+    margin:0 auto;
+    padding:150px 64px 130px;
+  }
+  .hero-left{
+    max-width:460px;
+  }
+  .hero-title{
+    font-size:clamp(2.6rem, 5vw, 4.4rem);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:0.98;
+    margin-bottom:36px;
+  }
+  .hero-meta{
+    display:flex;
+    gap:20px;
+    align-items:center;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:36px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-meta strong{ color:var(--ink); font-weight:600; }
+  .hero-desc p{
+    font-size:15px;
+    line-height:1.75;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  .hero-desc p:last-child{ margin-bottom:0; }
+
+  .hero-media{
+    position:relative;
+    width:100%;
+    aspect-ratio:1136/872;
+    background:#FEE100;
+    overflow:hidden;
+    cursor:none;
+  }
+  .hero-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .hero-media:hover img{ transform:scale(1.02); }
+
+  @media (max-width:900px){
+    .proj-hero{ grid-template-columns:1fr; padding:120px 24px 80px; gap:48px; }
+    .hero-left{ max-width:none; }
+  }
+
+  /* ---------- FULL-BLEED CONTENT BLOCKS ---------- */
+  .full-block{
+    width:100%;
+    overflow:hidden;
+    cursor:none;
+  }
+  .full-block img{
+    width:100%;
+    display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .full-block:hover img{ transform:scale(1.02); }
+
+  .trio-block{
+    display:flex;
+    width:100%;
+    overflow:hidden;
+  }
+  .trio-block > div{
+    flex:1 1 0;
+    min-width:0;
+    overflow:hidden;
+    cursor:none;
+  }
+  .trio-block img{
+    width:100%;
+    display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .trio-block > div:hover img{ transform:scale(1.02); }
+
+  @media (max-width:700px){
+    .trio-block{ flex-direction:column; }
+  }
+
+  /* ---------- CURSOR LABEL ---------- */
+  .cursor-label{
+    position:fixed;
+    top:0; left:0;
+    transform:translate(-9999px,-9999px);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:100px;
+    pointer-events:none;
+    z-index:600;
+    opacity:0;
+    transition:opacity 0.25s ease;
+    white-space:nowrap;
+  }
+  .cursor-label.show{ opacity:1; }
+
+  /* ---------- NEXT PROJECT ---------- */
+  .next-project{
+    padding:140px 64px 60px;
+    max-width:1600px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .next-project .np-label{
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:28px;
+  }
+  .next-project a.np-link{
+    display:block;
+    text-decoration:none;
+  }
+  .next-project .np-preview{
+    overflow:hidden;
+    aspect-ratio:16/8;
+    max-width:1200px;
+    margin:0 auto;
+    background:#ECEAE3;
+  }
+  .next-project .np-preview img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform 0.7s cubic-bezier(.22,.8,.32,1);
+  }
+  .next-project a.np-link:hover .np-preview img{ transform:scale(1.04); }
+  .next-project .np-title{
+    margin-top:28px;
+    font-size:clamp(1.6rem, 3vw, 2.6rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+
+  .np-expand{
+    position:fixed;
+    inset:0;
+    background:#ECEAE3;
+    z-index:900;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.5s ease;
+  }
+  .np-expand.active{ opacity:1; pointer-events:auto; }
+
+  /* ---------- FOOTER (matches site) ---------- */
+  .site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:40px 40px 48px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--gray);
+  }
+  .site-footer .footer-info{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .site-footer .footer-name{
+    color:var(--ink);
+    font-weight:600;
+    text-transform:uppercase;
+  }
+  .site-footer a{
+    color:var(--gray);
+    text-decoration:none;
+    transition:color 0.2s ease;
+  }
+  .site-footer a:hover{ color:var(--ink); }
+  .back-to-top{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:none;
+    color:var(--ink);
+    font-size:16px;
+    font-family:'Space Grotesk', sans-serif;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink:0;
+  }
+  .back-to-top:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="portfolio (1).html#home" class="brand">[ Home ]</a>
+  <div class="nav-links">
+    <a href="portfolio (1).html#about">About</a>
+    <a href="portfolio (1).html#work">Work</a>
+  </div>
+</nav>
+
+<!-- ---------- HERO ---------- -->
+<div class="hero-bg">
+<section class="proj-hero">
+  <div class="hero-left reveal">
+    <h1 class="hero-title">Calçot Truck</h1>
+    <div class="hero-meta"><strong>Branding</strong><span>·</span><span>2026</span></div>
+    <div class="hero-desc">
+      <p>Calçot Truck es una identidad visual para un concepto ficticio de street food que celebra la cultura catalana a través de una de sus tradiciones gastronómicas más emblemáticas: la calçotada. El proyecto reinterpreta este ritual popular en un contexto contemporáneo, acercando la identidad catalana a un público más amplio mediante un lenguaje gráfico desenfadado y actual.</p>
+      <p>La identidad toma como referencia la estética reconocible de los locales de kebab, reinterpretándola como un guiño visual a la cultura popular. A través de ilustraciones, una tipografía contundente y una paleta de colores vibrante, el proyecto crea un contraste entre el imaginario del fast food y la tradición catalana, dando lugar a una identidad cercana, divertida y con personalidad.</p>
+    </div>
+  </div>
+  <div class="hero-media reveal">
+    <img src="CALÇOT/_1_logo principal.jpg" alt="Logotipo Calçot Truck">
+  </div>
+</section>
+</div>
+
+<!-- ---------- APPLICATIONS: business card + menu + apron ---------- -->
+<div class="trio-block reveal">
+  <div><img src="CALÇOT/2_foto1.jpg" alt="Tarjetas Calçot Truck" loading="lazy"></div>
+  <div><img src="CALÇOT/3_foto2.jpg" alt="Carta y menú Calçot Truck" loading="lazy"></div>
+  <div><img src="CALÇOT/4_foto3.jpg" alt="Delantal Calçot Truck" loading="lazy"></div>
+</div>
+
+<!-- ---------- INSTAGRAM STORIES ---------- -->
+<div class="full-block reveal">
+  <img src="CALÇOT/5_historias.jpg" alt="Historias de Instagram Calçot Truck" loading="lazy">
+</div>
+
+<!-- ---------- FOOD TRUCK ---------- -->
+<div class="full-block reveal">
+  <img src="CALÇOT/Captura de pantalla 2026-08-04 a les 9.28.48.png" alt="Food truck Calçot Truck" loading="lazy">
+</div>
+
+<!-- ---------- SIGN + LOGO VARIANTS + TYPOGRAPHY ---------- -->
+<div class="full-block reveal">
+  <img src="CALÇOT/Captura de pantalla 2026-08-04 a les 9.37.05.png" alt="Cartel, variantes de logotipo y tipografía Calçot Truck" loading="lazy">
+</div>
+
+<!-- ---------- NEXT PROJECT ---------- -->
+<section class="next-project reveal">
+  <div class="np-label">Siguiente proyecto</div>
+  <a class="np-link" id="npLink" href="proyecto-asantodeque.html">
+    <div class="np-preview"><img id="npImg" src="TFG/ChatGPT Image 13 de juny del 2026, 19_37_16 1.png" alt="¿A Santo de Qué?"></div>
+    <div class="np-title">¿A Santo de Qué? — Branding</div>
+  </a>
+</section>
+
+<div class="np-expand" id="npExpand"></div>
+
+<footer class="site-footer">
+  <div class="footer-info">
+    <span class="footer-name">Irene Moreno</span>
+    <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+    <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+</footer>
+
+<div class="cursor-label" id="cursorLabel">Ver</div>
+
+<script>
+(function(){
+  // ---------- CURSOR LABEL "VER" ----------
+  const cursorLabel = document.getElementById('cursorLabel');
+  document.addEventListener('mousemove', e=>{
+    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
+  });
+  document.querySelectorAll('.hero-media, .full-block, .trio-block > div').forEach(el=>{
+    el.addEventListener('mouseenter', ()=> cursorLabel.classList.add('show'));
+    el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+  });
+
+  // ---------- SCROLL REVEAL ----------
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+  // ---------- NEXT PROJECT: expand transition before navigating ----------
+  const npLink = document.getElementById('npLink');
+  const npExpand = document.getElementById('npExpand');
+  npLink.addEventListener('click', function(e){
+    e.preventDefault();
+    const href = this.getAttribute('href');
+    npExpand.classList.add('active');
+    setTimeout(()=>{ window.location.href = href; }, 480);
+  });
+
+  // ---------- BACK TO TOP ----------
+  document.getElementById('backToTop').addEventListener('click', ()=>{
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>

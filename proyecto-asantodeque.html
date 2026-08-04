@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿A Santo de Qué? — Irene Moreno</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#0B0B0C;
+    --paper:#FFFFFF;
+    --cobalt:#2643F2;
+    --gray:#8A8880;
+    --line:#E7E6E1;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+
+    /* ---------- NAV ---------- */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 40px;
+    z-index:500;
+    mix-blend-mode:difference;
+    color:#fff;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .site-nav a{ color:inherit; text-decoration:none; opacity:0.9; transition:opacity 0.2s ease; }
+  .site-nav a:hover{ opacity:1; }
+  .site-nav .nav-links{ display:flex; gap:28px; }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.8s cubic-bezier(.22,.8,.32,1), transform 0.9s cubic-bezier(.22,.8,.32,1);
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero-bg{
+    background:#000000;
+    color:#fff;
+  }
+  .proj-hero{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:72px;
+    align-items:center;
+    max-width:1500px;
+    margin:0 auto;
+    padding:150px 64px 130px;
+  }
+  .hero-left{ max-width:460px; }
+  .hero-title{
+    font-size:clamp(2.2rem, 4.2vw, 3.6rem);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1.05;
+    margin-bottom:36px;
+    color:#fff;
+  }
+  .hero-meta{
+    display:flex;
+    gap:20px;
+    align-items:center;
+    font-size:12px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    margin-bottom:36px;
+    padding-bottom:36px;
+    border-bottom:1px solid rgba(255,255,255,0.18);
+  }
+  .hero-meta strong{ color:#fff; font-weight:600; }
+  .hero-desc p{
+    font-size:15px;
+    line-height:1.75;
+    color:rgba(255,255,255,0.85);
+    margin-bottom:18px;
+  }
+  .hero-desc p:last-child{ margin-bottom:0; }
+
+  .hero-media{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    background:#000000;
+    overflow:hidden;
+    cursor:none;
+  }
+  .hero-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .hero-media:hover img{ transform:scale(1.02); }
+
+  @media (max-width:900px){
+    .proj-hero{ grid-template-columns:1fr; padding:120px 24px 80px; gap:48px; }
+    .hero-left{ max-width:none; }
+  }
+
+  /* ---------- FULL-BLEED BLOCKS ---------- */
+  .full-block{ width:100%; overflow:hidden; cursor:none; }
+  .full-block img{
+    width:100%; display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .full-block:hover img{ transform:scale(1.02); }
+
+  /* ---------- MAP + TEXT ---------- */
+  .map-section{
+    display:grid;
+    grid-template-columns:0.8fr 1.2fr;
+    gap:80px;
+    align-items:center;
+    max-width:1400px;
+    margin:0 auto;
+    padding:140px 64px;
+  }
+  .map-text p{
+    font-size:16px;
+    line-height:1.75;
+    color:var(--ink);
+  }
+  .map-wrap{ position:relative; width:100%; }
+  .map-wrap img{ width:100%; display:block; }
+  .map-point{
+    position:absolute;
+    width:6.5%;
+    aspect-ratio:1/1;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    cursor:none;
+  }
+  .map-label{
+    position:absolute;
+    left:50%;
+    top:50%;
+    white-space:nowrap;
+    font-size:11px;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    pointer-events:none;
+    transition:opacity 0.15s ease;
+  }
+  .map-label .wine{ display:none; font-weight:600; color:var(--cobalt); }
+  .map-point:hover .map-label .city{ display:none; }
+  .map-point:hover .map-label .wine{ display:inline; }
+  @media (max-width:900px){
+    .map-section{ grid-template-columns:1fr; gap:48px; padding:100px 24px; }
+  }
+
+  /* ---------- CURSOR LABEL ---------- */
+  .cursor-label{
+    position:fixed;
+    top:0; left:0;
+    transform:translate(-9999px,-9999px);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:100px;
+    pointer-events:none;
+    z-index:600;
+    opacity:0;
+    transition:opacity 0.25s ease;
+    white-space:nowrap;
+  }
+  .cursor-label.show{ opacity:1; }
+
+  /* ---------- HORIZONTAL CAROUSEL ---------- */
+  .hcarousel{ position:relative; padding:0 0 0; }
+  .hcarousel-viewport{
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x proximity;
+    cursor:grab;
+    -ms-overflow-style:none;
+    scrollbar-width:none;
+  }
+  .hcarousel-viewport::-webkit-scrollbar{ display:none; }
+  .hcarousel-viewport.grabbing{ cursor:grabbing; }
+  .hcarousel-track{
+    display:flex;
+    gap:32px;
+    width:max-content;
+    padding:0 64px;
+  }
+  .hcarousel-track .slide{
+    height:min(70vh, 640px);
+    scroll-snap-align:center;
+    flex:0 0 auto;
+    overflow:hidden;
+    cursor:none;
+  }
+  .hcarousel-track .slide img{
+    height:100%;
+    width:auto;
+    max-width:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .hcarousel-track .slide:hover img{ transform:scale(1.02); }
+  .hcarousel-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    color:var(--ink);
+    z-index:10;
+    transition:background 0.2s ease, border-color 0.2s ease;
+  }
+  .hcarousel-arrow:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .hcarousel-arrow.prev{ left:20px; }
+  .hcarousel-arrow.next{ right:20px; }
+  @media (max-width:700px){
+    .hcarousel-arrow{ display:none; }
+    .hcarousel-track{ padding:0 20px; }
+  }
+
+  /* ---------- NARROW TEXT ---------- */
+  .narrow-text{
+    max-width:520px;
+    margin:0 auto;
+    padding:150px 24px;
+    text-align:center;
+  }
+  .narrow-text p{
+    font-size:21px;
+    line-height:1.7;
+    letter-spacing:-0.01em;
+  }
+
+  /* ---------- VIDEO SELECTOR ---------- */
+  .anim-section{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 64px 160px;
+  }
+  .anim-label{
+    text-align:center;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:32px;
+  }
+  .anim-wrap{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    background:#0B0B0C;
+    overflow:hidden;
+    box-shadow:0 30px 70px rgba(0,0,0,0.14);
+  }
+  .anim-wrap video{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 0.6s ease;
+  }
+  .anim-wrap video.active{ opacity:1; }
+  .anim-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px; height:48px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.4);
+    background:rgba(0,0,0,0.25);
+    backdrop-filter:blur(4px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:18px;
+    color:#fff;
+    z-index:10;
+    transition:background 0.2s ease;
+  }
+  .anim-arrow:hover{ background:rgba(0,0,0,0.5); }
+  .anim-arrow.prev{ left:20px; }
+  .anim-arrow.next{ right:20px; }
+  .anim-dots{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:24px;
+  }
+  .anim-dots button{
+    width:9px; height:9px;
+    border-radius:50%;
+    border:none;
+    background:var(--line);
+    cursor:pointer;
+    padding:0;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .anim-dots button.active{ background:var(--ink); transform:scale(1.2); }
+
+  @media (max-width:700px){
+    .anim-section{ padding:0 20px 100px; }
+  }
+
+  /* ---------- NEXT PROJECT ---------- */
+  .next-project{
+    padding:60px 64px 60px;
+    max-width:1600px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .next-project .np-label{
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:28px;
+  }
+  .next-project a.np-link{ display:block; text-decoration:none; }
+  .next-project .np-preview{
+    overflow:hidden;
+    aspect-ratio:16/8;
+    max-width:1200px;
+    margin:0 auto;
+    background:#ECEAE3;
+  }
+  .next-project .np-preview img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform 0.7s cubic-bezier(.22,.8,.32,1);
+  }
+  .next-project a.np-link:hover .np-preview img{ transform:scale(1.04); }
+  .next-project .np-title{
+    margin-top:28px;
+    font-size:clamp(1.6rem, 3vw, 2.6rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .np-expand{
+    position:fixed; inset:0; background:#ECEAE3; z-index:900;
+    opacity:0; pointer-events:none; transition:opacity 0.5s ease;
+  }
+  .np-expand.active{ opacity:1; pointer-events:auto; }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:40px 40px 48px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--gray);
+  }
+  .site-footer .footer-info{ display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
+  .site-footer .footer-name{ color:var(--ink); font-weight:600; text-transform:uppercase; }
+  .site-footer a{ color:var(--gray); text-decoration:none; transition:color 0.2s ease; }
+  .site-footer a:hover{ color:var(--ink); }
+  .back-to-top{
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid var(--line); background:none; color:var(--ink);
+    font-size:16px; font-family:'Space Grotesk', sans-serif; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink:0;
+  }
+  .back-to-top:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="portfolio (1).html#home" class="brand">[ Home ]</a>
+  <div class="nav-links">
+    <a href="portfolio (1).html#about">About</a>
+    <a href="portfolio (1).html#work">Work</a>
+  </div>
+</nav>
+
+<!-- ---------- HERO ---------- -->
+<div class="hero-bg">
+<section class="proj-hero">
+  <div class="hero-left reveal">
+    <h1 class="hero-title">¿A Santo de Qué?</h1>
+    <div class="hero-meta"><strong>Branding</strong><span>·</span><span>TFG 2026</span></div>
+    <div class="hero-desc">
+      <p>¿A santo de qué? es un proyecto de branding y packaging que pone en valor las fiestas populares de España como expresión de identidad, territorio y tradición. La colección reúne seis celebraciones —San Fermín, La Mercè, San Isidro, San Mateo, Sant Joan y El Pilar—, vinculando cada una con la denominación de origen correspondiente.</p>
+      <p>El proyecto parte de una reflexión sobre el origen de estas festividades: aunque hoy las vivimos como celebraciones colectivas, muchas nacen de la devoción a un santo o patrona. De esta idea surge el naming ¿A santo de qué?, una expresión popular que juega con ese doble significado y despierta la curiosidad por descubrir la historia detrás de cada fiesta. El vino actúa como vehículo conductor de la colección, reforzando el vínculo entre territorio, memoria y celebración colectiva.</p>
+    </div>
+  </div>
+  <div class="hero-media reveal">
+    <img src="TFG/foto1_tfg.jpg" alt="Botella El Pilar — ¿A Santo de Qué?">
+  </div>
+</section>
+</div>
+
+<!-- ---------- SEIS BOTELLAS ---------- -->
+<div class="full-block reveal">
+  <img src="TFG/ChatGPT Image 13 de juny del 2026, 19_37_16 1.png" alt="Las seis botellas de la colección ¿A Santo de Qué?">
+</div>
+
+<!-- ---------- MAPA + TEXTO ---------- -->
+<section class="map-section">
+  <div class="map-text reveal">
+    <p>Cada fiesta se vincula a un vino de su territorio, estableciendo una relación entre celebración, paisaje e identidad. Las seis referencias pertenecen a diferentes Denominaciones de Origen de España, convirtiendo al vino en el hilo conductor de la colección y en un símbolo del patrimonio cultural que comparten cada fiesta y su lugar de origen.</p>
+  </div>
+  <div class="map-wrap reveal">
+    <img src="TFG/map-clean.png" alt="Mapa de España con las seis fiestas populares">
+    <div class="map-point" style="left:57.35%; top:27.22%;">
+      <span class="map-label" style="transform:translate(-50%,-190%);"><span class="city">San Mateo, Logroño</span><span class="wine">DOCa Rioja</span></span>
+    </div>
+    <div class="map-point" style="left:71.09%; top:20.03%;">
+      <span class="map-label" style="transform:translate(-20%,-190%);"><span class="city">San Fermín, Pamplona</span><span class="wine">DOP Navarra</span></span>
+    </div>
+    <div class="map-point" style="left:86.88%; top:27.22%;">
+      <span class="map-label" style="transform:translate(-108%,-50%); text-align:right;"><span class="city">La Mercè, Barcelona</span><span class="wine">DOP Catalunya</span></span>
+    </div>
+    <div class="map-point" style="left:67.08%; top:30.84%;">
+      <span class="map-label" style="transform:translate(-50%,90%);"><span class="city">El Pilar, Zaragoza</span><span class="wine">DOP Cariñena</span></span>
+    </div>
+    <div class="map-point" style="left:42.25%; top:50.00%;">
+      <span class="map-label" style="transform:translate(-58%,90%);"><span class="city">San Isidro, Madrid</span><span class="wine">DOP Vinos de Madrid</span></span>
+    </div>
+    <div class="map-point" style="left:97.52%; top:61.85%;">
+      <span class="map-label" style="transform:translate(-108%,-50%); text-align:right;"><span class="city">Sant Joan, Menorca</span><span class="wine">IGP Illa de Menorca</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- CARRUSEL HORIZONTAL ---------- -->
+<div class="hcarousel reveal">
+  <button class="hcarousel-arrow prev" aria-label="Anterior">&#8592;</button>
+  <div class="hcarousel-viewport" id="hcarouselViewport">
+    <div class="hcarousel-track" id="hcarouselTrack">
+      <div class="slide"><img src="TFG/Captura de pantalla 2026-08-04 a les 10.12.47.png" alt="Colocando las botellas en la caja ¿A Santo de Qué?" draggable="false"></div>
+      <div class="slide"><img src="TFG/poster-negro.png" alt="Póster ¿A Santo de Qué? — El Pilar" draggable="false"></div>
+      <div class="slide"><img src="TFG/carousel-flatlay.png" alt="Las seis botellas en composición circular" draggable="false"></div>
+      <div class="slide"><img src="TFG/carousel-brazos.png" alt="Cuatro brazos sosteniendo botellas de la colección" draggable="false"></div>
+      <div class="slide"><img src="TFG/carousel-seis-alt.png" alt="Las seis botellas en formación escalonada" draggable="false"></div>
+      <div class="slide"><img src="TFG/carousel-pareja.png" alt="Pareja con pañuelos sosteniendo botellas" draggable="false"></div>
+    </div>
+  </div>
+  <button class="hcarousel-arrow next" aria-label="Siguiente">&#8594;</button>
+</div>
+
+<!-- ---------- GRID 2x3 ---------- -->
+<div class="full-block reveal" style="margin-top:160px;">
+  <img src="TFG/Captura de pantalla 2026-08-04 a les 10.25.02.png" alt="Botella, caja, estampa y pañuelo de cada fiesta">
+</div>
+
+<!-- ---------- TEXTO FINAL ---------- -->
+<section class="narrow-text reveal">
+  <p>La identidad se materializa en una colección de seis etiquetas ilustradas, donde cada diseño representa los símbolos más característicos de su fiesta mediante un lenguaje gráfico contemporáneo. El sistema se extiende a estampas coleccionables dedicadas a cada santo y a un packaging compuesto por cajas individuales y una caja de colección, compartiendo todos los soportes un mismo lenguaje visual.</p>
+</section>
+
+<!-- ---------- SELECTOR DE ANIMACIONES ---------- -->
+<section class="anim-section reveal">
+  <div class="anim-label">Animaciones</div>
+  <div class="anim-wrap" id="animWrap">
+    <video class="active" muted loop playsinline autoplay poster="TFG/anim1-poster.jpg">
+      <source src="TFG/irene4.mp4" type="video/mp4">
+    </video>
+    <video muted loop playsinline poster="TFG/anim2-poster.jpg">
+      <source src="TFG/tot2___1 (1).mp4" type="video/mp4">
+    </video>
+    <button class="anim-arrow prev" aria-label="Animación anterior">&#8592;</button>
+    <button class="anim-arrow next" aria-label="Animación siguiente">&#8594;</button>
+  </div>
+  <div class="anim-dots" id="animDots">
+    <button class="active" data-i="0" aria-label="Animación 1"></button>
+    <button data-i="1" aria-label="Animación 2"></button>
+  </div>
+</section>
+
+<!-- ---------- NEXT PROJECT ---------- -->
+<section class="next-project reveal">
+  <div class="np-label">Siguiente proyecto</div>
+  <a class="np-link" id="npLink" href="proyecto-transit.html">
+    <div class="np-preview"><img id="npImg" src="TRANSIT/TRANSIT_PORTADA.png" alt="Transit Festival"></div>
+    <div class="np-title">Transit Festival — Branding</div>
+  </a>
+</section>
+
+<div class="np-expand" id="npExpand"></div>
+
+<footer class="site-footer">
+  <div class="footer-info">
+    <span class="footer-name">Irene Moreno</span>
+    <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+    <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+</footer>
+
+<div class="cursor-label" id="cursorLabel">Ver</div>
+
+<script>
+(function(){
+  // ---------- CURSOR LABEL ----------
+  const cursorLabel = document.getElementById('cursorLabel');
+  let cursorDefaultText = 'Ver';
+  document.addEventListener('mousemove', e=>{
+    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
+  });
+  document.querySelectorAll('.hero-media, .full-block, .hcarousel-track .slide').forEach(el=>{
+    el.addEventListener('mouseenter', ()=>{ cursorLabel.textContent = 'Ver'; cursorLabel.classList.add('show'); });
+    el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+  });
+
+  // ---------- SCROLL REVEAL ----------
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+  // ---------- HORIZONTAL CAROUSEL: drag + arrows ----------
+  const viewport = document.getElementById('hcarouselViewport');
+  let dragging = false, armedPointerId = null, startX = 0, startScroll = 0;
+
+  viewport.addEventListener('pointerdown', e=>{
+    armedPointerId = e.pointerId;
+    dragging = false;
+    startX = e.clientX;
+    startScroll = viewport.scrollLeft;
+  });
+  viewport.addEventListener('pointermove', e=>{
+    if (armedPointerId === null) return;
+    const dx = e.clientX - startX;
+    if (!dragging){
+      if (Math.abs(dx) < 4) return;
+      dragging = true;
+      viewport.classList.add('grabbing');
+      viewport.setPointerCapture(armedPointerId);
+    }
+    viewport.scrollLeft = startScroll - dx;
+  });
+  function endDrag(){ dragging = false; armedPointerId = null; viewport.classList.remove('grabbing'); }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointerleave', endDrag);
+
+  document.querySelector('.hcarousel-arrow.prev').addEventListener('click', ()=> viewport.scrollBy({ left:-420, behavior:'smooth' }));
+  document.querySelector('.hcarousel-arrow.next').addEventListener('click', ()=> viewport.scrollBy({ left:420, behavior:'smooth' }));
+
+  // ---------- VIDEO SELECTOR ----------
+  const videos = [...document.querySelectorAll('#animWrap video')];
+  const dots = [...document.querySelectorAll('#animDots button')];
+  let animIndex = 0;
+  function showAnim(i){
+    animIndex = (i + videos.length) % videos.length;
+    videos.forEach((v,idx)=>{
+      if (idx === animIndex){
+        v.classList.add('active');
+        v.currentTime = 0;
+        v.play().catch(()=>{});
+      } else {
+        v.classList.remove('active');
+        v.pause();
+      }
+    });
+    dots.forEach((d,idx)=> d.classList.toggle('active', idx === animIndex));
+  }
+  document.querySelector('.anim-arrow.prev').addEventListener('click', ()=> showAnim(animIndex-1));
+  document.querySelector('.anim-arrow.next').addEventListener('click', ()=> showAnim(animIndex+1));
+  dots.forEach(d=> d.addEventListener('click', ()=> showAnim(parseInt(d.dataset.i,10))));
+
+  // ---------- NEXT PROJECT: expand transition ----------
+  const npLink = document.getElementById('npLink');
+  const npExpand = document.getElementById('npExpand');
+  npLink.addEventListener('click', function(e){
+    e.preventDefault();
+    const href = this.getAttribute('href');
+    npExpand.classList.add('active');
+    setTimeout(()=>{ window.location.href = href; }, 480);
+  });
+
+  // ---------- BACK TO TOP ----------
+  document.getElementById('backToTop').addEventListener('click', ()=>{
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>

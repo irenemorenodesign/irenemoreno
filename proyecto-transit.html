@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transit Festival — Irene Moreno</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#0B0B0C;
+    --paper:#FFFFFF;
+    --blue:#04469F;
+    --gray:#8A8880;
+    --line:#E7E6E1;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+
+    /* ---------- NAV ---------- */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 40px;
+    z-index:500;
+    mix-blend-mode:difference;
+    color:#fff;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .site-nav a{ color:inherit; text-decoration:none; opacity:0.9; transition:opacity 0.2s ease; }
+  .site-nav a:hover{ opacity:1; }
+  .site-nav .nav-links{ display:flex; gap:28px; }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.8s cubic-bezier(.22,.8,.32,1), transform 0.9s cubic-bezier(.22,.8,.32,1);
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- HERO (BLUE) ---------- */
+  .hero-bg{ background:var(--blue); color:#fff; }
+  .proj-hero{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:56px;
+    align-items:center;
+    max-width:1400px;
+    margin:0 auto;
+    padding:150px 64px 120px;
+  }
+  .hero-left{ max-width:460px; }
+  .hero-title{
+    font-size:clamp(1.9rem, 3.4vw, 2.6rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin-bottom:18px;
+  }
+  .hero-meta{
+    font-size:13px;
+    letter-spacing:0.06em;
+    color:rgba(255,255,255,0.6);
+    margin-bottom:26px;
+  }
+  .hero-desc p{
+    font-size:14px;
+    line-height:1.7;
+    color:rgba(255,255,255,0.88);
+  }
+
+  .hero-media{
+    position:relative;
+    height:640px;
+  }
+  .hero-media .piece{
+    position:absolute;
+    cursor:none;
+  }
+  .hero-media .piece img{
+    width:100%; display:block;
+    filter:drop-shadow(0 30px 50px rgba(0,0,0,0.35));
+  }
+  .hero-media .piece-octagon{
+    top:0; right:0;
+    width:66%;
+  }
+  .hero-media .piece-plate{
+    bottom:0; left:0;
+    width:86%;
+  }
+
+  @media (max-width:900px){
+    .proj-hero{ grid-template-columns:1fr; padding:120px 24px 60px; gap:40px; }
+    .hero-left{ max-width:none; }
+    .hero-media{ height:460px; }
+  }
+
+  /* ---------- CURSOR LABEL ---------- */
+  .cursor-label{
+    position:fixed;
+    top:0; left:0;
+    transform:translate(-9999px,-9999px);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:#fff;
+    padding:9px 18px;
+    border-radius:100px;
+    pointer-events:none;
+    z-index:600;
+    opacity:0;
+    transition:opacity 0.25s ease;
+    white-space:nowrap;
+  }
+  .cursor-label.show{ opacity:1; }
+
+  /* ---------- POSTER CARDS (WHITE) ---------- */
+  .cards-section{
+    background:var(--paper);
+    padding:100px 64px;
+  }
+  .cards-row{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:32px;
+    max-width:1300px;
+    margin:0 auto;
+  }
+  .card-item{ overflow:hidden; cursor:none; }
+  .card-item img{
+    width:100%; display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .card-item:hover img{ transform:scale(1.03); }
+
+  @media (max-width:800px){
+    .cards-row{ grid-template-columns:1fr; gap:24px; }
+    .cards-section{ padding:60px 24px; }
+  }
+
+  /* ---------- TICKET (BLUE) ---------- */
+  .ticket-section{
+    background:var(--blue);
+    padding:100px 64px;
+  }
+  .ticket-wrap{
+    max-width:1300px;
+    margin:0 auto;
+    cursor:none;
+  }
+  .ticket-wrap img{ width:100%; display:block; }
+
+  @media (max-width:800px){ .ticket-section{ padding:60px 24px; } }
+
+  /* ---------- MERCH: SHIRTS (BLUE) ---------- */
+  .shirts-section{
+    background:var(--blue);
+    padding:20px 64px 100px;
+    overflow:hidden;
+  }
+  .shirts-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    max-width:1300px;
+    margin:0 auto;
+  }
+  .shirts-row img{ width:100%; display:block; }
+
+  @media (max-width:800px){
+    .shirts-row{ grid-template-columns:1fr; }
+    .shirts-section{ padding:0 24px 60px; }
+  }
+
+  /* ---------- MERCH: CUP + LIGHTER (WHITE) ---------- */
+  .objects-section{
+    background:var(--paper);
+    padding:100px 64px;
+    overflow:hidden;
+  }
+  .objects-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    max-width:900px;
+    margin:0 auto;
+    align-items:end;
+  }
+  .objects-row img{ width:100%; display:block; }
+
+  @media (max-width:800px){
+    .objects-section{ padding:60px 24px; }
+  }
+
+  /* ---------- INSTAGRAM + MAP (BLUE) ---------- */
+  .digital-section{
+    background:var(--blue);
+    padding:100px 64px;
+  }
+  .digital-row{
+    display:grid;
+    grid-template-columns:0.7fr 1.3fr;
+    gap:40px;
+    align-items:center;
+    max-width:1300px;
+    margin:0 auto;
+  }
+  .digital-row .ig-post{ cursor:none; }
+  .digital-row .map-shot{ cursor:none; overflow:hidden; }
+  .digital-row img{ width:100%; display:block; }
+  .digital-row .map-shot img{ transition:transform 0.6s cubic-bezier(.22,.8,.32,1); }
+  .digital-row .map-shot:hover img{ transform:scale(1.03); }
+
+  @media (max-width:800px){
+    .digital-row{ grid-template-columns:1fr; }
+    .digital-section{ padding:60px 24px; }
+  }
+
+  /* ---------- BOTTOM PHOTOS ---------- */
+  .bottom-photos{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+  }
+  .bottom-photos .photo-item{ overflow:hidden; cursor:none; }
+  .bottom-photos img{
+    width:100%; display:block;
+    transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
+  }
+  .bottom-photos .photo-item:hover img{ transform:scale(1.03); }
+
+  @media (max-width:700px){
+    .bottom-photos{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- NEXT PROJECT ---------- */
+  .next-project{
+    padding:100px 64px 60px;
+    max-width:1600px;
+    margin:0 auto;
+    text-align:center;
+  }
+  .next-project .np-label{
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gray);
+    margin-bottom:28px;
+  }
+  .next-project a.np-link{ display:block; text-decoration:none; }
+  .next-project .np-preview{
+    overflow:hidden;
+    aspect-ratio:16/8;
+    max-width:1200px;
+    margin:0 auto;
+    background:#ECEAE3;
+  }
+  .next-project .np-preview img{
+    width:100%; height:100%; object-fit:cover;
+    transition:transform 0.7s cubic-bezier(.22,.8,.32,1);
+  }
+  .next-project a.np-link:hover .np-preview img{ transform:scale(1.04); }
+  .next-project .np-title{
+    margin-top:28px;
+    font-size:clamp(1.6rem, 3vw, 2.6rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .np-expand{
+    position:fixed; inset:0; background:#ECEAE3; z-index:900;
+    opacity:0; pointer-events:none; transition:opacity 0.5s ease;
+  }
+  .np-expand.active{ opacity:1; pointer-events:auto; }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:40px 40px 48px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--gray);
+  }
+  .site-footer .footer-info{ display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
+  .site-footer .footer-name{ color:var(--ink); font-weight:600; text-transform:uppercase; }
+  .site-footer a{ color:var(--gray); text-decoration:none; transition:color 0.2s ease; }
+  .site-footer a:hover{ color:var(--ink); }
+  .back-to-top{
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid var(--line); background:none; color:var(--ink);
+    font-size:16px; font-family:'Space Grotesk', sans-serif; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink:0;
+  }
+  .back-to-top:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="portfolio (1).html#home" class="brand">[ Home ]</a>
+  <div class="nav-links">
+    <a href="portfolio (1).html#about">About</a>
+    <a href="portfolio (1).html#work">Work</a>
+  </div>
+</nav>
+
+<!-- ---------- HERO (BLUE) ---------- -->
+<div class="hero-bg">
+<section class="proj-hero">
+  <div class="hero-left reveal">
+    <h1 class="hero-title">Transit Festival</h1>
+    <div class="hero-meta">Branding &middot; 2026</div>
+    <div class="hero-desc">
+      <p>Transit es la identidad visual de un festival ficticio que explora el concepto del tránsito humano como punto de encuentro entre personas, culturas y disciplinas artísticas. El proyecto traslada esta idea a la música, el arte y la gastronomía, que se convierten en espacios de conexión e intercambio. La identidad se construye a partir de un sistema gráfico flexible y adaptable, diseñado para funcionar de forma coherente en todos los soportes del festival. El uso de una tipografía de gran impacto, una paleta cromática vibrante y composiciones dinámicas refuerzan la sensación de movimiento y energía, dando lugar a una identidad contemporánea, reconocible y versátil aplicada a cartelería, señalética, merchandising, plataformas digitales e intervenciones urbanas.</p>
+    </div>
+  </div>
+  <div class="hero-media reveal">
+    <div class="piece piece-octagon">
+      <img src="TRANSIT/ChatGPT Image May 27, 2026, 01_21_55 PM 1.png" alt="Sello Artistes Urbans — Transit Festival">
+    </div>
+    <div class="piece piece-plate">
+      <img src="TRANSIT/TRANSIT_PORTADA.png" alt="Placa Transit Festival">
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ---------- POSTER CARDS (WHITE) ---------- -->
+<section class="cards-section">
+  <div class="cards-row">
+    <div class="card-item reveal"><img src="TRANSIT/A4 - 1.png" alt="Cartel Transit — placa"></div>
+    <div class="card-item reveal"><img src="TRANSIT/A4 - 6.png" alt="Cartel Transit — Artistes Urbans"></div>
+    <div class="card-item reveal"><img src="TRANSIT/A4 - 5.jpg" alt="Cartel Transit — line up"></div>
+  </div>
+</section>
+
+<!-- ---------- TICKET (BLUE) ---------- -->
+<section class="ticket-section">
+  <div class="ticket-wrap reveal">
+    <img src="TRANSIT/entrada 1.png" alt="Entrada Transit Festival">
+  </div>
+</section>
+
+<!-- ---------- SHIRTS (BLUE) ---------- -->
+<section class="shirts-section">
+  <div class="shirts-row">
+    <div class="reveal parallax-item" data-speed="0.06"><img src="TRANSIT/shirt-back.png" alt="Camiseta Transit — espalda"></div>
+    <div class="reveal parallax-item" data-speed="0.10"><img src="TRANSIT/shirt-front.png" alt="Camiseta Transit — pecho"></div>
+  </div>
+</section>
+
+<!-- ---------- CUP + LIGHTER (WHITE) ---------- -->
+<section class="objects-section">
+  <div class="objects-row">
+    <div class="reveal parallax-item" data-speed="0.14"><img src="TRANSIT/Group 11.png" alt="Vaso Transit Festival"></div>
+    <div class="reveal parallax-item" data-speed="0.08"><img src="TRANSIT/Group 12.png" alt="Mechero Transit Festival"></div>
+  </div>
+</section>
+
+<!-- ---------- INSTAGRAM + MAP (BLUE) ---------- -->
+<section class="digital-section">
+  <div class="digital-row">
+    <div class="ig-post reveal"><img src="TRANSIT/Instagram Post Mockup 1.png" alt="Mockup post de Instagram — Transit Festival"></div>
+    <div class="map-shot reveal"><img src="TRANSIT/Captura de pantalla 2026-08-04 a les 13.09.10 1.png" alt="Mapa del recinto — Transit Festival"></div>
+  </div>
+</section>
+
+<!-- ---------- BOTTOM PHOTOS ---------- -->
+<div class="bottom-photos">
+  <div class="photo-item reveal"><img src="TRANSIT/ChatGPT Image Jun 8, 2026, 10_24_31 PM 1.png" alt="Llavero Transit colgado del retrovisor"></div>
+  <div class="photo-item reveal"><img src="TRANSIT/ChatGPT Image 8 de juny del 2026, 22_31_11 1.png" alt="Estarcido Transit en el pavimento"></div>
+</div>
+
+<!-- ---------- NEXT PROJECT ---------- -->
+<section class="next-project reveal">
+  <div class="np-label">Siguiente proyecto</div>
+  <a class="np-link" id="npLink" href="proyecto-verbena.html">
+    <div class="np-preview"><img id="npImg" src="VERBENA/portada.png" alt="Verbena"></div>
+    <div class="np-title">Verbena — Editorial</div>
+  </a>
+</section>
+
+<div class="np-expand" id="npExpand"></div>
+
+<footer class="site-footer">
+  <div class="footer-info">
+    <span class="footer-name">Irene Moreno</span>
+    <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+    <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+</footer>
+
+<div class="cursor-label" id="cursorLabel">Ver</div>
+
+<script>
+(function(){
+  // ---------- CURSOR LABEL ----------
+  const cursorLabel = document.getElementById('cursorLabel');
+  document.addEventListener('mousemove', e=>{
+    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
+  });
+  document.querySelectorAll('.card-item, .ticket-wrap, .ig-post, .map-shot, .photo-item').forEach(el=>{
+    el.addEventListener('mouseenter', ()=>{ cursorLabel.textContent = 'Ver'; cursorLabel.classList.add('show'); });
+    el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+  });
+
+  // ---------- SCROLL REVEAL ----------
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+  // ---------- SUBTLE INDEPENDENT PARALLAX (merch) ----------
+  const parallaxItems = [...document.querySelectorAll('.parallax-item')];
+  let ticking = false;
+  function updateParallax(){
+    const vh = window.innerHeight;
+    parallaxItems.forEach(el=>{
+      const speed = parseFloat(el.dataset.speed) || 0.08;
+      const rect = el.getBoundingClientRect();
+      const centerOffset = (rect.top + rect.height/2) - vh/2;
+      const y = centerOffset * -speed;
+      el.style.transform = `translateY(${y}px)`;
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{
+    if (!ticking){
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive:true });
+  updateParallax();
+
+  // ---------- NEXT PROJECT: expand transition ----------
+  const npLink = document.getElementById('npLink');
+  const npExpand = document.getElementById('npExpand');
+  npLink.addEventListener('click', function(e){
+    e.preventDefault();
+    const href = this.getAttribute('href');
+    npExpand.classList.add('active');
+    setTimeout(()=>{ window.location.href = href; }, 480);
+  });
+
+  // ---------- BACK TO TOP ----------
+  document.getElementById('backToTop').addEventListener('click', ()=>{
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>

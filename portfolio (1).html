@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu Nombre — Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#0B0B0C;
+    --paper:#FFFFFF;
+    --cobalt:#2643F2;
+    --yellow:#F2C230;
+    --gray:#8A8880;
+    --line:#E7E6E1;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+  }
+
+  #view-home{ background:var(--paper); }
+  #view-work{ background:#fff; display:none; }
+  #view-about{ background:#fff; display:none; }
+
+  /* ---------- SHARED NAV ---------- */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 40px;
+    z-index:500;
+    mix-blend-mode:difference;
+    color:white;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    transition:opacity 0.3s ease;
+  }
+  .site-nav.nav-hidden{ opacity:0; pointer-events:none; }
+  .site-nav a{ color:inherit; text-decoration:none; opacity:0.9; transition:opacity 0.2s ease; }
+  .site-nav a:hover{ opacity:1; }
+  .site-nav a.active{ opacity:1; font-weight:600; }
+  .site-nav .nav-links{ display:flex; gap:28px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    height:340vh;
+    position:relative;
+  }
+
+  .hero-sticky{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .headline{
+    position:relative;
+    z-index:20;
+    text-align:center;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:300;
+    line-height:0.95;
+    letter-spacing:-0.01em;
+    font-size:clamp(2.6rem, 8vw, 7rem);
+    padding:0 20px;
+    pointer-events:none;
+    will-change:transform, opacity;
+  }
+  .headline .accent{
+    display:block;
+    font-style:italic;
+    font-weight:500;
+    color:var(--cobalt);
+  }
+  .headline .sub{
+    display:block;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(0.75rem, 1.1vw, 1rem);
+    font-weight:500;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    margin-top:28px;
+    color:var(--ink);
+    transition:opacity 0.2s linear;
+  }
+
+  .proj-label{
+    position:absolute;
+    top:96px;
+    left:50%;
+    transform:translateX(-50%);
+    text-align:center;
+    z-index:4;
+    pointer-events:none;
+  }
+  .proj-label .eyebrow{
+    font-size:11px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gray);
+  }
+  .proj-label .count{
+    display:block;
+    font-size:11px;
+    letter-spacing:0.14em;
+    color:var(--ink);
+    margin-top:4px;
+  }
+
+  .scrap{
+    position:absolute;
+    top:50%; left:50%;
+    width:150px;
+    height:190px;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    z-index:3;
+    will-change:transform, opacity;
+    display:block;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .scrap.tall{height:210px;}
+  .scrap.wide{width:190px; height:150px;}
+
+  .scrap-cap{
+    position:absolute;
+    left:0; right:0;
+    bottom:-30px;
+    text-align:center;
+    font-size:11px;
+    letter-spacing:0.03em;
+    color:var(--ink);
+    pointer-events:none;
+  }
+  .scrap-cap .cat{
+    display:block;
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--cobalt);
+    margin-bottom:2px;
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom:36px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:11px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--gray);
+    z-index:6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+  .scroll-hint .line{
+    width:1px; height:36px;
+    background:var(--gray);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:0.2;}
+    50%{opacity:1;}
+  }
+
+  /* ---------- GRID SECTION ---------- */
+  .grid-section{
+    padding:120px 40px 160px;
+    max-width:1400px;
+    margin:0 auto;
+  }
+  .grid-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:56px;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    padding-bottom:24px;
+  }
+  .grid-header h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:300;
+    font-size:clamp(1.8rem, 3vw, 2.8rem);
+  }
+  .grid-header .count{
+    font-size:13px;
+    color:var(--gray);
+    letter-spacing:0.1em;
+  }
+
+  .site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:40px 40px 48px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--gray);
+  }
+  .site-footer .footer-info{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:24px;
+  }
+  .site-footer .footer-name{
+    color:var(--ink);
+    font-weight:600;
+    text-transform:uppercase;
+  }
+  .site-footer a{
+    color:var(--gray);
+    text-decoration:none;
+    transition:color 0.2s ease;
+  }
+  .site-footer a:hover{ color:var(--ink); }
+  .back-to-top{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:none;
+    color:var(--ink);
+    font-size:16px;
+    font-family:'Space Grotesk', sans-serif;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink:0;
+  }
+  .back-to-top:hover{
+    background:var(--ink);
+    color:#fff;
+    border-color:var(--ink);
+  }
+
+  /* ============ WORK VIEW ============ */
+
+  .page{
+    padding:120px 64px 0;
+    max-width:1600px;
+    margin:0 auto;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    line-height:1.6;
+    margin-bottom:64px;
+  }
+  .eyebrow span{display:block;}
+  .eyebrow span:first-child{font-weight:600;}
+  .eyebrow span:last-child{color:var(--gray); font-weight:400;}
+
+  /* ---------- CATEGORIES ---------- */
+  .cats-wrap{
+    position:relative;
+    min-height:56vh;
+    display:flex;
+  }
+
+  .cats{
+    list-style:none;
+    width:52%;
+  }
+
+  .cats li{
+    font-size:clamp(2.2rem, 5.4vw, 4.2rem);
+    font-weight:400;
+    line-height:1.14;
+    letter-spacing:-0.01em;
+    padding:4px 0;
+    cursor:pointer;
+    user-select:none;
+    transform-origin:left center;
+    transition:
+      opacity 0.45s cubic-bezier(.22,.8,.32,1),
+      transform 0.55s cubic-bezier(.22,1.4,.36,1),
+      font-weight 0.15s linear,
+      color 0.3s ease;
+    opacity:1;
+  }
+  .cats li.dim{ opacity:0.28; }
+  .cats li.emph{
+    font-weight:700;
+    transform:scale(1.24);
+  }
+
+  .preview{
+    position:absolute;
+    right:0;
+    top:0;
+    width:min(30vw, 380px);
+    aspect-ratio:3/4;
+    pointer-events:none;
+  }
+  .preview img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    box-shadow:0 30px 60px rgba(0,0,0,0.16);
+    transform:translateY(28px) rotate(0deg);
+    transition:opacity 0.55s cubic-bezier(.22,.8,.32,1), transform 0.6s cubic-bezier(.22,1.1,.32,1);
+  }
+  .preview img.show{
+    opacity:1;
+  }
+
+  @media (max-width:900px){
+    .preview{ display:none; }
+    .cats{ width:100%; }
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-viewport{
+    margin:96px 0 80px;
+    overflow:hidden;
+    cursor:grab;
+    width:100vw;
+    position:relative;
+    left:50%;
+    transform:translateX(-50%);
+  }
+  .gallery-viewport.grabbing{ cursor:grabbing; }
+
+  .gallery-track{
+    display:flex;
+    align-items:flex-start;
+    will-change:transform;
+    padding-left:64px;
+  }
+
+  .card{
+    flex:0 0 auto;
+    width:clamp(240px, 20vw, 320px);
+    margin-right:56px;
+    cursor:none;
+    opacity:1;
+    transform:translateY(0);
+    transition:opacity 0.5s cubic-bezier(.22,.8,.32,1), transform 0.5s cubic-bezier(.22,.8,.32,1);
+  }
+  .card.filtering-out{
+    opacity:0;
+    transform:translateY(14px);
+  }
+
+  .card-img{
+    aspect-ratio:4/5;
+    overflow:hidden;
+    background:#efefec;
+  }
+  .card-img img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.8s cubic-bezier(.22,.8,.32,1);
+  }
+  .card:hover .card-img img{ transform:scale(1.06); }
+  .card:hover .card-img{ transform:translateY(-6px); }
+  .card-img{ transition:transform 0.5s cubic-bezier(.22,1.1,.32,1); }
+
+  .card-info{
+    margin-top:16px;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+  .card:hover .card-info{ opacity:1; transform:translateY(0); }
+  .card-info .name{
+    display:block;
+    font-size:14px;
+    font-weight:500;
+  }
+  .card-info .cat{
+    display:block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--gray);
+    margin-top:3px;
+  }
+
+  /* custom cursor label for cards */
+  .cursor-label{
+    position:fixed;
+    top:0; left:0;
+    transform:translate(-9999px,-9999px);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:#fff;
+    padding:9px 16px;
+    border-radius:100px;
+    pointer-events:none;
+    z-index:200;
+    opacity:0;
+    transition:opacity 0.25s ease;
+    white-space:nowrap;
+  }
+  .cursor-label.show{ opacity:1; }
+
+  /* ---------- PROJECT OVERLAY ---------- */
+  .project-overlay{
+    position:fixed;
+    inset:0;
+    z-index:300;
+    pointer-events:none;
+  }
+  .overlay-img-wrap{
+    position:fixed;
+    overflow:hidden;
+    background:#efefec;
+    transition:top 0.7s cubic-bezier(.22,.8,.32,1), left 0.7s cubic-bezier(.22,.8,.32,1),
+               width 0.7s cubic-bezier(.22,.8,.32,1), height 0.7s cubic-bezier(.22,.8,.32,1);
+  }
+  .overlay-img-wrap img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .overlay-info{
+    position:fixed;
+    left:64px;
+    bottom:56px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity 0.4s ease, transform 0.4s ease;
+  }
+  .overlay-info h2{
+    font-size:clamp(1.6rem,3vw,2.4rem);
+    font-weight:500;
+  }
+  .overlay-info span{
+    display:block;
+    margin-top:6px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--gray);
+  }
+  .overlay-close{
+    position:fixed;
+    top:40px; right:56px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    letter-spacing:0.06em;
+    background:none;
+    border:none;
+    cursor:pointer;
+    opacity:0;
+    transition:opacity 0.4s ease;
+    pointer-events:none;
+  }
+  .project-overlay.open .overlay-close,
+  .project-overlay.open .overlay-info{
+    opacity:1; pointer-events:auto;
+  }
+  .project-overlay.open{ pointer-events:auto; }
+
+  /* ============ ABOUT VIEW ============ */
+  .about-page{
+    padding:140px 64px 100px;
+    max-width:1500px;
+    margin:0 auto;
+  }
+
+  .about-title{
+    font-size:clamp(1.6rem, 2.6vw, 2.1rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin-bottom:80px;
+  }
+
+  .about-hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:60px;
+    min-height:280px;
+    margin-bottom:120px;
+  }
+
+  .about-intro{
+    max-width:560px;
+    padding-top:40px;
+  }
+  .about-name{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .about-intro p{
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:16px;
+    color:var(--ink);
+  }
+  .about-intro p:last-child{ margin-bottom:0; }
+
+  .about-photo-wrap{
+    flex:0 0 auto;
+    width:min(30vw, 380px);
+    aspect-ratio:4/3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .about-photo{
+    width:88%;
+    height:88%;
+    background:#DEDEDA url('img/about-photo.jpg') center/cover no-repeat;
+    box-shadow:0 24px 50px rgba(0,0,0,0.12);
+    opacity:0;
+    transform:rotate(0deg) translateY(18px);
+    transition:opacity 0.7s cubic-bezier(.22,.8,.32,1), transform 0.7s cubic-bezier(.22,1.1,.32,1);
+  }
+  .about-photo.show{
+    opacity:1;
+    transform:rotate(-4deg) translateY(0);
+  }
+
+  .about-columns{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:40px;
+  }
+  @media (max-width:900px){
+    .about-hero{ flex-direction:column; }
+    .about-photo-wrap{ width:60vw; }
+    .about-columns{ grid-template-columns:1fr 1fr; row-gap:48px; }
+  }
+
+  .about-col h3{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:24px;
+  }
+  .about-col a,
+  .about-col > span{
+    display:block;
+    font-size:14px;
+    color:var(--ink);
+    text-decoration:none;
+    margin-bottom:10px;
+  }
+  .about-col a:hover{ opacity:0.6; }
+  .about-entry{
+    margin-bottom:20px;
+  }
+  .about-entry a{
+    display:block;
+    margin-bottom:0;
+  }
+  .about-entry strong{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .about-entry span{
+    display:block;
+    font-size:13px;
+    color:var(--gray);
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" id="siteNav">
+  <a href="#home" class="brand">[ Home ]</a>
+  <div class="nav-links">
+    <a href="#about" data-nav="about">About</a>
+    <a href="#work" data-nav="work">Work</a>
+  </div>
+</nav>
+
+<div id="view-home">
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="headline">
+      Irene Moreno
+      <span class="accent">Graphic Design</span>
+      <span class="sub">Branding · Editorial · Motion</span>
+    </div>
+    <div class="proj-label">
+      <span class="eyebrow">Proyectos seleccionados</span>
+      <span class="count">01 — 06</span>
+    </div>
+    <a class="scrap" href="proyecto-calcot.html" style="width:189px; height:180px; background-image:url('PORTADAS PROYECTOS/CALÇOTTRUCK_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Branding</span>Calçot Truck</div>
+    </a>
+    <a class="scrap" href="proyecto-verbena.html" style="width:220px; height:122px; background-image:url('PORTADAS PROYECTOS/VERBENA_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Editorial</span>Verbena</div>
+    </a>
+    <a class="scrap" href="proyecto-parisfont.html" style="width:161px; height:200px; background-image:url('PORTADAS PROYECTOS/PARIS_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Editorial</span>Paris Font</div>
+    </a>
+    <a class="scrap" href="proyecto-asantodeque.html" style="width:217px; height:160px; background-image:url('PORTADAS PROYECTOS/ASANTODEQUE_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Branding</span>¿A Santo de Qué?</div>
+    </a>
+    <a class="scrap" href="motion.html" style="width:117px; height:210px; background-image:url('PORTADAS PROYECTOS/MOTION_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Motion</span>Quina calor!</div>
+    </a>
+    <a class="scrap" href="posters.html" style="width:141px; height:200px; background-image:url('PORTADAS PROYECTOS/POSTERS_PORTADA.png'); background-size:contain;">
+      <div class="scrap-cap"><span class="cat">Posters</span>Elige tu propia aventura</div>
+    </a>
+    <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
+  </div>
+</section>
+
+<section class="grid-section">
+  <div class="grid-header">
+    <a href="#work" class="count" style="color:inherit; text-decoration:none;">Ver todos los proyectos →</a>
+  </div>
+</section>
+
+</div>
+
+<div id="view-work">
+<div class="page">
+  <div class="eyebrow">
+    <span>Work</span>
+    <span>Projects</span>
+  </div>
+
+  <div class="cats-wrap">
+    <ul class="cats" id="cats">
+      <li data-cat="ALL" class="emph">ALL</li>
+      <li data-cat="BRANDING">BRANDING</li>
+      <li data-cat="EDITORIAL">EDITORIAL</li>
+      <li data-cat="MOTION">MOTION</li>
+      <li data-cat="POSTERS">POSTERS</li>
+    </ul>
+    <div class="preview"><img id="previewImg" src="" alt=""></div>
+  </div>
+
+  <div class="gallery-viewport" id="galleryViewport">
+    <div class="gallery-track" id="galleryTrack"></div>
+  </div>
+</div>
+
+<div class="cursor-label" id="cursorLabel">Ver proyecto</div>
+
+<div class="project-overlay" id="projectOverlay">
+  <div class="overlay-img-wrap" id="overlayImgWrap"><img id="overlayImg" src="" alt=""></div>
+  <div class="overlay-info">
+    <h2 id="overlayTitle"></h2>
+    <span id="overlayCat"></span>
+  </div>
+  <button class="overlay-close" id="overlayClose">Cerrar ×</button>
+</div>
+</div>
+
+<div id="view-about">
+<div class="about-page">
+  <h1 class="about-title">About</h1>
+
+  <div class="about-hero">
+    <div class="about-intro">
+      <p class="about-name"><strong>Irene Moreno — Graphic Designer</strong></p>
+      <p>Soy diseñadora gráfica en Barcelona, enfocada en branding, diseño editorial, packaging y motion.</p>
+      <p>Creo que el diseño es una forma de contar historias, de crear experiencias con sentido y de conectar con las personas. Disfruto transformando ideas en identidades visuales claras, cuidadas y memorables.</p>
+    </div>
+    <div class="about-photo-wrap">
+      <div class="about-photo" id="aboutPhoto"></div>
+    </div>
+  </div>
+
+  <div class="about-columns">
+    <div class="about-col">
+      <h3>Contacto</h3>
+      <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+      <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+    </div>
+    <div class="about-col">
+      <h3>Experiencia profesional</h3>
+      <div class="about-entry">
+        <a href="https://www.wearefirma.com/es" target="_blank" rel="noopener"><strong>FIRMA, Motion Designer</strong></a>
+        <span>2026 — Presente</span>
+      </div>
+      <div class="about-entry">
+        <a href="https://theothers.tv/" target="_blank" rel="noopener"><strong>The Others, Graphic Designer</strong></a>
+        <span>2025 — 2026</span>
+      </div>
+      <div class="about-entry">
+        <a href="https://summa.es/" target="_blank" rel="noopener"><strong>Summa Branding, Graphic Designer</strong></a>
+        <span>2025</span>
+      </div>
+    </div>
+    <div class="about-col">
+      <h3>Formación</h3>
+      <div class="about-entry">
+        <strong>EINA Centro Universitario de Diseny i Art de Barcelona (UAB)</strong>
+        <span>Grau en Disseny Gràfic, 2022-2026</span>
+      </div>
+    </div>
+    <div class="about-col">
+      <h3>Skills</h3>
+      <span>Adobe Illustrator</span>
+      <span>After Effects</span>
+      <span>Adobe Photoshop</span>
+      <span>Adobe InDesign</span>
+      <span>Figma</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-info">
+    <span class="footer-name">Irene Moreno</span>
+    <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+    <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+</footer>
+
+<script>
+(function(){
+  const scraps = document.querySelectorAll('.scrap');
+  const hero = document.getElementById('hero');
+  const headline = document.querySelector('.headline');
+  const headlineSub = document.querySelector('.headline .sub');
+  const projLabel = document.querySelector('.proj-label');
+
+  // Per-piece choreography, one entry per .scrap in DOM order.
+  // "chaos": where it lands when it converges into the pile below the headline.
+  // "grid": where it settles once it "orders itself" into the final projects grid.
+  const pieces = [
+    { chaos:{x:-9, y:-9, rot:-12}, grid:{col:-1, row:-0.5}, startMul:5 },
+    { chaos:{x:7,  y:-5, rot:9},   grid:{col:0,  row:-0.5}, startMul:4.2 },
+    { chaos:{x:-8, y:7,  rot:14},  grid:{col:1,  row:-0.5}, startMul:4.8 },
+    { chaos:{x:8,  y:8,  rot:-9},  grid:{col:-1, row:0.5},  startMul:4.4 },
+    { chaos:{x:0,  y:-10,rot:-6},  grid:{col:0,  row:0.5},  startMul:5.4 },
+    { chaos:{x:1,  y:9,  rot:11},  grid:{col:1,  row:0.5},  startMul:4.6 },
+  ];
+
+  const COL_W = 30;   // vw between grid columns — wide enough that cards keep a clear margin
+  const ROW_H = 40;   // vh between grid rows — enough that captions never cover the row below
+  const GRID_Y_SHIFT = 8;  // vh — nudge the final grid down, but keep the bottom row's captions inside the viewport
+
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  function update(){
+    const rect = hero.getBoundingClientRect();
+    const heroHeight = hero.offsetHeight - window.innerHeight;
+    let progress = -rect.top / heroHeight;
+    progress = clamp01(progress);
+
+    // Phase A 0    -> 0.16 : fly in and converge over the headline (covering it)
+    // Phase B 0.16 -> 0.38 : hold, tightly overlapping, covering the phrase
+    // Phase C 0.30 -> 0.55 : headline shrinks and docks at the top (stays visible from here on)
+    // Phase D 0.38 -> 1.00 : pieces order themselves into the final projects grid, captions appear
+
+    let entrance, settle;
+    if (progress < 0.16){
+      entrance = easeOutCubic(progress/0.16);
+      settle = 0;
+    } else if (progress < 0.38){
+      entrance = 1;
+      settle = 0;
+    } else {
+      entrance = 1;
+      settle = easeInOutCubic((progress-0.38)/0.62);
+    }
+
+    const opacity = progress < 0.05 ? progress/0.05 : 1;
+
+    // on narrow screens the fixed-px covers are wide relative to the viewport,
+    // so shrink them and widen the column pitch to keep the settled grid from
+    // overlapping itself or running off the edge
+    const isMobile = window.innerWidth < 700;
+    const mobileScale = isMobile ? 0.58 : 1;
+    const colW = isMobile ? 46 : COL_W;
+
+    scraps.forEach((el, i)=>{
+      const p = pieces[i];
+      const cap = el.querySelector('.scrap-cap');
+
+      const chaosX = p.chaos.x * (1 + (1-entrance) * p.startMul);
+      const chaosY = p.chaos.y * (1 + (1-entrance) * p.startMul);
+      const chaosRot = p.chaos.rot * (1 + (1-entrance) * 0.6);
+
+      const gridX = p.grid.col * colW;
+      const gridY = p.grid.row * ROW_H + GRID_Y_SHIFT;
+
+      const x = chaosX + (gridX - chaosX) * settle;
+      const y = chaosY + (gridY - chaosY) * settle;
+      const rot = chaosRot * (1 - settle);
+      const scale = (0.82 + settle*0.28) * mobileScale;
+
+      el.style.transform =
+        `translate(-50%, -50%) translate(${x}vw, ${y}vh) rotate(${rot}deg) scale(${scale})`;
+      el.style.opacity = opacity;
+      el.style.zIndex = 4 + i;
+
+      if (cap){
+        const capOpacity = clamp01((progress - 0.86) / 0.12);
+        cap.style.opacity = capOpacity;
+      }
+    });
+
+    // Headline: shrinks and docks near the top as the pieces begin to order themselves
+    const dockT = easeInOutCubic(clamp01((progress - 0.30) / 0.25));
+    headline.style.transform = `translateY(${-40*dockT}vh) scale(${1 - 0.64*dockT})`;
+    if (headlineSub) headlineSub.style.opacity = 1 - dockT;
+
+    // "Proyectos seleccionados" label fades in once the headline is docked
+    const labelOpacity = clamp01((progress - 0.5) / 0.2);
+    if (projLabel) projLabel.style.opacity = labelOpacity;
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
+  function easeInOutCubic(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+  window.__homeUpdate = update;
+})();
+
+(function(){
+  // ---------- DATA ----------
+  const projects = [
+    { title:"¿A Santo de Qué?", cat:"BRANDING", img:"PORTADAS PROYECTOS/ASANTODEQUE_PORTADA.png", link:"proyecto-asantodeque.html" },
+    { title:"Transit Festival", cat:"BRANDING", img:"PORTADAS PROYECTOS/TRANSIT_PORTADA.png", link:"proyecto-transit.html" },
+    { title:"Calçot Truck", cat:"BRANDING", img:"PORTADAS PROYECTOS/CALÇOTTRUCK_PORTADA.png", link:"proyecto-calcot.html" },
+    { title:"Verbena", cat:"EDITORIAL", img:"PORTADAS PROYECTOS/VERBENA_PORTADA.png", link:"proyecto-verbena.html" },
+    { title:"Paris Font", cat:"EDITORIAL", img:"PORTADAS PROYECTOS/PARIS_PORTADA.png", link:"proyecto-parisfont.html" },
+
+    { title:"Quina calor!",  cat:"MOTION", img:"MOTION/poster-quinacalor.jpg", link:"motion.html" },
+    { title:"Saoko",         cat:"MOTION", img:"MOTION/poster-saoko.jpg",      link:"motion.html" },
+    { title:"Comp 16",       cat:"MOTION", img:"MOTION/poster-comp16.jpg",     link:"motion.html" },
+    { title:"Chinchín",      cat:"MOTION", img:"MOTION/poster-chinchin.jpg",   link:"motion.html" },
+    { title:"Comp 1.6",      cat:"MOTION", img:"MOTION/poster-comp1_6.jpg",    link:"motion.html" },
+    { title:"Ball",          cat:"MOTION", img:"MOTION/poster-ball2.jpg",      link:"motion.html" },
+    { title:"Tipo 11",       cat:"MOTION", img:"MOTION/poster-tipo11.jpg",     link:"motion.html" },
+    { title:"Comp 17",       cat:"MOTION", img:"MOTION/poster-comp17.jpg",     link:"motion.html" },
+
+    { title:"Elige tu propia aventura", cat:"POSTERS", img:"POSTERS/PORTADA WORK:PROYECTOS.jpg", link:"posters.html" },
+    { title:"Almost Forgot",            cat:"POSTERS", img:"POSTERS/funn.jpg", link:"posters.html" },
+    { title:"Verdes Césped",            cat:"POSTERS", img:"POSTERS/verdescesped.jpg", link:"posters.html" },
+    { title:"Berghain x Rosalía",       cat:"POSTERS", img:"POSTERS/ROSALIA-02-2.jpg", link:"posters.html" },
+    { title:"Cam Back",                 cat:"POSTERS", img:"POSTERS/CAMB/CAMBACK_2_Mesa de trabajo 1 copia 9.jpg", link:"posters.html" },
+    { title:"Camstanyada",              cat:"POSTERS", img:"POSTERS/CAMB/CAMSTANYADA_Mesa de trabajo 1 copia.jpg", link:"posters.html" },
+    { title:"Arasi — Calendari",        cat:"POSTERS", img:"POSTERS/CAMB/arasi_calendari_Mesa de trabajo 1 copia 5.jpg", link:"posters.html" },
+    { title:"Camclub",                  cat:"POSTERS", img:"POSTERS/CAMB/camcluub-01.jpg", link:"posters.html" },
+    { title:"Vacamces",                 cat:"POSTERS", img:"POSTERS/CAMB/2_vacamces-8.jpg", link:"posters.html" },
+    { title:"Camells",                  cat:"POSTERS", img:"POSTERS/CAMB/camells2.jpg", link:"posters.html" },
+    { title:"Camnaval",                 cat:"POSTERS", img:"POSTERS/CAMB/camnaval-13.jpg", link:"posters.html" },
+    { title:"Campi",                    cat:"POSTERS", img:"POSTERS/CAMB/campi-13.jpg", link:"posters.html" },
+    { title:"Winter",                   cat:"POSTERS", img:"POSTERS/CAMB/winter3.jpg", link:"posters.html" },
+  ];
+  const imgUrl = (seed, w, h) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+  const imgFor = (p, w, h) => p.img || imgUrl(p.seed, w, h);
+
+  // ---------- CATEGORY HOVER / PREVIEW ----------
+  const catsEl = document.getElementById('cats');
+  const catItems = [...catsEl.querySelectorAll('li')];
+  const previewImg = document.getElementById('previewImg');
+  let activeCat = 'ALL';
+  let lastShownSeed = null;
+
+  function projectsFor(cat){
+    return cat === 'ALL' ? projects : projects.filter(p => p.cat === cat);
+  }
+
+  function paintCats(emphCat){
+    catItems.forEach(li=>{
+      const isEmph = li.dataset.cat === emphCat;
+      li.classList.toggle('emph', isEmph);
+      li.classList.toggle('dim', !isEmph);
+    });
+  }
+  paintCats(activeCat);
+
+  function showPreviewFor(cat){
+    const pool = projectsFor(cat === 'ALL' ? (['BRANDING','EDITORIAL','MOTION','POSTERS'][Math.floor(Math.random()*4)]) : cat);
+    if (!pool.length) return;
+    let pick = pool[Math.floor(Math.random()*pool.length)];
+    if (pool.length > 1 && pick.title === lastShownSeed){
+      pick = pool[(pool.indexOf(pick)+1) % pool.length];
+    }
+    lastShownSeed = pick.title;
+    const rot = (Math.random()*12 - 6).toFixed(1);
+
+    previewImg.classList.remove('show');
+    previewImg.style.transform = `translateY(28px) rotate(${rot}deg)`;
+    // force reflow so the next class add re-triggers the transition
+    void previewImg.offsetWidth;
+    previewImg.src = imgFor(pick, 520, 700);
+    requestAnimationFrame(()=>{
+      previewImg.classList.add('show');
+      previewImg.style.transform = `translateY(0px) rotate(${rot}deg)`;
+    });
+  }
+
+  catItems.forEach(li=>{
+    li.addEventListener('mouseenter', ()=>{
+      paintCats(li.dataset.cat);
+      showPreviewFor(li.dataset.cat);
+    });
+    li.addEventListener('mouseleave', ()=>{
+      paintCats(activeCat);
+    });
+    li.addEventListener('click', ()=>{
+      activeCat = li.dataset.cat;
+      paintCats(activeCat);
+      filterGallery(activeCat);
+    });
+  });
+
+  // ---------- GALLERY: build + filter ----------
+  const track = document.getElementById('galleryTrack');
+  const viewport = document.getElementById('galleryViewport');
+  const cursorLabel = document.getElementById('cursorLabel');
+
+  let singleSetWidth = 0;
+  let offsetX = 0;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartOffset = 0;
+  let lastInteraction = 0;
+  const AUTO_SPEED = 0.35; // px per frame, very slow drift
+  const RESUME_DELAY = 900; // ms idle before auto-drift resumes
+
+  function buildTrack(cat){
+    const list = projectsFor(cat);
+    track.innerHTML = '';
+    // duplicate 3x for seamless infinite loop
+    for (let rep=0; rep<3; rep++){
+      list.forEach(p=>{
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.cat = p.cat;
+        card.innerHTML = `
+          <div class="card-img"${p.bg ? ` style="background:${p.bg}"` : ''}><img src="${imgFor(p, 640, 800)}" alt="${p.title}"${p.fit ? ` style="object-fit:${p.fit}"` : ''}></div>
+          <div class="card-info">
+            <span class="name">${p.title}</span>
+            <span class="cat">${p.cat}</span>
+          </div>`;
+        card.addEventListener('click', ()=> p.link ? (location.href = p.link) : openProject(p, card));
+        track.appendChild(card);
+      });
+    }
+    requestAnimationFrame(()=>{
+      singleSetWidth = track.scrollWidth / 3;
+      offsetX = -singleSetWidth; // start on the middle copy
+      applyTransform();
+    });
+  }
+
+  function filterGallery(cat){
+    const cards = [...track.children];
+    if (!cards.length){ buildTrack(cat); return; }
+    cards.forEach(c => c.classList.add('filtering-out'));
+    setTimeout(()=> buildTrack(cat), 260);
+  }
+
+  function applyTransform(){
+    track.style.transform = `translateX(${offsetX}px)`;
+  }
+
+  function wrapOffset(){
+    if (singleSetWidth <= 0) return;
+    if (offsetX <= -singleSetWidth*2) offsetX += singleSetWidth;
+    if (offsetX >= 0) offsetX -= singleSetWidth;
+  }
+
+  function raf(){
+    const idle = performance.now() - lastInteraction > RESUME_DELAY;
+    if (!dragging && idle && singleSetWidth > 0){
+      offsetX -= AUTO_SPEED;
+      wrapOffset();
+      applyTransform();
+    }
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // drag with pointer events (only engage once the pointer actually moves,
+  // so a plain click on a card isn't swallowed by pointer capture)
+  let armedPointerId = null;
+  viewport.addEventListener('pointerdown', e=>{
+    armedPointerId = e.pointerId;
+    dragging = false;
+    dragStartX = e.clientX;
+    dragStartOffset = offsetX;
+  });
+  viewport.addEventListener('pointermove', e=>{
+    if (armedPointerId === null) return;
+    const dx = e.clientX - dragStartX;
+    if (!dragging){
+      if (Math.abs(dx) < 4) return;
+      dragging = true;
+      viewport.classList.add('grabbing');
+      viewport.setPointerCapture(armedPointerId);
+    }
+    offsetX = dragStartOffset + dx;
+    wrapOffset();
+    applyTransform();
+    lastInteraction = performance.now();
+  });
+  function endDrag(){
+    dragging = false;
+    armedPointerId = null;
+    viewport.classList.remove('grabbing');
+    lastInteraction = performance.now();
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointerleave', endDrag);
+
+  // wheel / trackpad horizontal
+  viewport.addEventListener('wheel', e=>{
+    e.preventDefault();
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    offsetX -= delta;
+    wrapOffset();
+    applyTransform();
+    lastInteraction = performance.now();
+  }, { passive:false });
+
+  // custom cursor label on cards
+  viewport.addEventListener('mousemove', e=>{
+    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
+  });
+  track.addEventListener('mouseover', e=>{
+    if (e.target.closest('.card')) cursorLabel.classList.add('show');
+  });
+  track.addEventListener('mouseout', e=>{
+    if (e.target.closest('.card') && !e.relatedTarget?.closest('.card')) cursorLabel.classList.remove('show');
+  });
+
+  window.__workInit = function(){
+    if (!window.__workInited){
+      window.__workInited = true;
+      buildTrack('ALL');
+    }
+  };
+
+  // ---------- OPEN PROJECT (editorial expand transition) ----------
+  const overlay = document.getElementById('projectOverlay');
+  const overlayWrap = document.getElementById('overlayImgWrap');
+  const overlayImg = document.getElementById('overlayImg');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const overlayCat = document.getElementById('overlayCat');
+  const overlayClose = document.getElementById('overlayClose');
+
+  function openProject(p, cardEl){
+    const imgEl = cardEl.querySelector('.card-img img');
+    const rect = imgEl.getBoundingClientRect();
+
+    overlayImg.src = imgEl.src;
+    overlayWrap.style.transition = 'none';
+    overlayWrap.style.top = rect.top + 'px';
+    overlayWrap.style.left = rect.left + 'px';
+    overlayWrap.style.width = rect.width + 'px';
+    overlayWrap.style.height = rect.height + 'px';
+    overlay.classList.add('open');
+    cursorLabel.classList.remove('show');
+
+    // force reflow, then animate to fullscreen
+    void overlayWrap.offsetWidth;
+    requestAnimationFrame(()=>{
+      overlayWrap.style.transition = '';
+      overlayWrap.style.top = '0px';
+      overlayWrap.style.left = '0px';
+      overlayWrap.style.width = '100vw';
+      overlayWrap.style.height = '100vh';
+    });
+
+    overlayTitle.textContent = p.title;
+    overlayCat.textContent = p.cat;
+  }
+
+  function closeProject(){
+    overlay.classList.remove('open');
+  }
+  overlayClose.addEventListener('click', closeProject);
+  overlay.addEventListener('click', e=>{
+    if (e.target === overlay) closeProject();
+  });
+})();
+
+// ---------- ROUTING between views (hash-based, no reload) ----------
+const VIEWS = ['home', 'work', 'about'];
+
+function setView(name){
+  if (!VIEWS.includes(name)) name = 'home';
+
+  VIEWS.forEach(v=>{
+    document.getElementById('view-' + v).style.display = (v === name) ? 'block' : 'none';
+  });
+  window.scrollTo(0,0);
+
+  document.querySelectorAll('.site-nav [data-nav]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.nav === name);
+  });
+
+  if (name === 'work' && window.__workInit) window.__workInit();
+  if (name === 'home' && window.__homeUpdate) window.__homeUpdate();
+  if (name === 'about'){
+    const photo = document.getElementById('aboutPhoto');
+    if (photo){
+      photo.classList.remove('show');
+      void photo.offsetWidth;
+      requestAnimationFrame(()=> photo.classList.add('show'));
+    }
+  }
+}
+function syncFromHash(){
+  const h = (location.hash || '').replace('#','');
+  setView(VIEWS.includes(h) ? h : 'home');
+}
+window.addEventListener('hashchange', syncFromHash);
+syncFromHash();
+
+// hide the shared nav while a project overlay is open
+(function(){
+  const nav = document.getElementById('siteNav');
+  const overlay = document.getElementById('projectOverlay');
+  if (!nav || !overlay) return;
+  const obs = new MutationObserver(()=>{
+    nav.classList.toggle('nav-hidden', overlay.classList.contains('open'));
+  });
+  obs.observe(overlay, { attributes:true, attributeFilter:['class'] });
+})();
+
+document.getElementById('backToTop').addEventListener('click', ()=>{
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+</script>
+
+</body>
+</html>

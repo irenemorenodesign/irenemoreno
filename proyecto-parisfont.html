@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paris Font — Irene Moreno</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#0B0B0C;
+    --paper:#0B0B0C;
+    --cobalt:#6E8CFF;
+    --gray:#8A8880;
+    --line:rgba(255,255,255,0.14);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:#fff;
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    cursor:default;
+  }
+  img,video{max-width:100%; display:block;}
+  a{color:inherit;}
+
+    /* ---------- NAV ---------- */
+  .site-nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 40px;
+    z-index:500;
+    mix-blend-mode:difference;
+    color:#fff;
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .site-nav a{ color:inherit; text-decoration:none; opacity:0.9; transition:opacity 0.2s ease; }
+  .site-nav a:hover{ opacity:1; }
+  .site-nav .nav-links{ display:flex; gap:28px; }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.8s cubic-bezier(.22,.8,.32,1), transform 0.9s cubic-bezier(.22,.8,.32,1);
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- HERO ---------- */
+  .proj-hero{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:64px;
+    align-items:start;
+    max-width:1400px;
+    margin:0 auto;
+    padding:140px 64px 120px;
+  }
+  .hero-left{ max-width:440px; padding-top:6px; }
+  .hero-title{
+    font-size:clamp(2rem, 3.6vw, 2.8rem);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin-bottom:20px;
+  }
+  .hero-meta{
+    font-size:13px;
+    letter-spacing:0.06em;
+    color:rgba(255,255,255,0.55);
+    margin-bottom:28px;
+  }
+  .hero-desc p{
+    font-size:14px;
+    line-height:1.7;
+    color:rgba(255,255,255,0.82);
+    margin-bottom:16px;
+  }
+  .hero-desc p:last-child{ margin-bottom:0; }
+
+  .hero-media{
+    position:relative;
+    width:100%;
+    max-width:260px;
+    aspect-ratio:200/258;
+    background:#000;
+    overflow:hidden;
+    cursor:none;
+    justify-self:end;
+  }
+  .hero-media video{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  @media (max-width:820px){
+    .proj-hero{ grid-template-columns:1fr; padding:120px 24px 60px; gap:36px; }
+    .hero-left{ max-width:none; }
+    .hero-media{ justify-self:start; max-width:220px; }
+  }
+
+  /* ---------- CURSOR LABEL ---------- */
+  .cursor-label{
+    position:fixed;
+    top:0; left:0;
+    transform:translate(-9999px,-9999px);
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    background:#fff;
+    color:#000;
+    padding:9px 18px;
+    border-radius:100px;
+    pointer-events:none;
+    z-index:600;
+    opacity:0;
+    transition:opacity 0.25s ease;
+    white-space:nowrap;
+  }
+  .cursor-label.show{ opacity:1; }
+
+  /* ---------- PLIEGOS GRID ---------- */
+  .pliegos-grid{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:10px;
+    max-width:1500px;
+    margin:0 auto;
+    padding:0 40px 40px;
+  }
+  .pliego-item{
+    aspect-ratio:419.5/595.3;
+    overflow:hidden;
+    background:#fff;
+    cursor:none;
+  }
+  .pliego-item img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.5s cubic-bezier(.22,.8,.32,1);
+  }
+  .pliego-item:hover img{ transform:scale(1.05); }
+
+  @media (max-width:1000px){ .pliegos-grid{ grid-template-columns:repeat(4,1fr); } }
+  @media (max-width:600px){ .pliegos-grid{ grid-template-columns:repeat(3,1fr); gap:6px; padding:0 16px 24px; } }
+
+  /* ---------- NARROW TEXT ---------- */
+  .narrow-text{
+    max-width:480px;
+    margin:0 auto;
+    padding:100px 24px 120px;
+    text-align:left;
+  }
+  .narrow-text p{
+    font-size:15px;
+    line-height:1.75;
+    color:rgba(255,255,255,0.82);
+  }
+
+  /* ---------- CLOSING VIDEO ---------- */
+  .closing-video{
+    width:100%;
+    max-width:1500px;
+    margin:0 auto;
+    padding:0 40px 140px;
+    cursor:none;
+  }
+  .closing-video-inner{
+    width:100%;
+    aspect-ratio:900/601;
+    background:#000;
+    overflow:hidden;
+  }
+  .closing-video video{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.96);
+    display:flex; align-items:center; justify-content:center;
+    z-index:900;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.35s ease;
+    padding:60px;
+  }
+  .lightbox.open{ opacity:1; pointer-events:auto; }
+  .lightbox-content{
+    max-width:82vw; max-height:88vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lightbox-content img{
+    max-width:82vw; max-height:88vh;
+    width:auto; height:auto;
+    display:block;
+    box-shadow:0 40px 100px rgba(0,0,0,0.6);
+  }
+  .lightbox-close{
+    position:fixed;
+    top:32px; right:40px;
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease;
+    z-index:901;
+  }
+  .lightbox-close:hover{ background:rgba(255,255,255,0.18); }
+  .lightbox-arrow{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    width:52px; height:52px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease;
+    z-index:901;
+  }
+  .lightbox-arrow:hover{ background:rgba(255,255,255,0.18); }
+  .lightbox-arrow.prev{ left:32px; }
+  .lightbox-arrow.next{ right:32px; }
+  .lightbox-index{
+    position:fixed;
+    bottom:32px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:rgba(255,255,255,0.6);
+    z-index:901;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    padding:40px 40px 48px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:rgba(255,255,255,0.55);
+  }
+  .site-footer .footer-info{ display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
+  .site-footer .footer-name{ color:#fff; font-weight:600; text-transform:uppercase; }
+  .site-footer a{ color:rgba(255,255,255,0.55); text-decoration:none; transition:color 0.2s ease; }
+  .site-footer a:hover{ color:#fff; }
+  .back-to-top{
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid var(--line); background:none; color:#fff;
+    font-size:16px; font-family:'Space Grotesk', sans-serif; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    flex-shrink:0;
+  }
+  .back-to-top:hover{ background:#fff; color:#000; border-color:#fff; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="portfolio (1).html#home" class="brand">[ Home ]</a>
+  <div class="nav-links">
+    <a href="portfolio (1).html#about">About</a>
+    <a href="portfolio (1).html#work">Work</a>
+  </div>
+</nav>
+
+<!-- ---------- HERO ---------- -->
+<section class="proj-hero">
+  <div class="hero-left reveal">
+    <h1 class="hero-title">Paris Font</h1>
+    <div class="hero-meta">Editorial &middot; 2025</div>
+    <div class="hero-desc">
+      <p>El proyecto parte de la creación de una tipografía inspirada en el modernismo, tomando como principal referencia algunos carteles de Cigarrillos París, donde destaca el marcado contraste del peso horizontal en las letras. A partir de este referente, el objetivo fue reinterpretar ese lenguaje visual desde una perspectiva contemporánea.</p>
+      <p>El resultado es una tipografía funcional y versátil, que mantiene un carácter ornamental y distintivo, aportando personalidad sin renunciar a la legibilidad.</p>
+    </div>
+  </div>
+  <div class="hero-media reveal">
+    <video autoplay muted loop playsinline poster="PARIS/pliego-01.jpg">
+      <source src="PARIS/paris 2026-01-16-10-56-24.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<!-- ---------- PLIEGOS GRID ---------- -->
+<section class="pliegos-grid reveal" id="pliegosGrid"></section>
+
+<!-- ---------- TEXTO FINAL ---------- -->
+<section class="narrow-text reveal">
+  <p>Más allá de recuperar rasgos formales del modernismo, el proyecto busca reinterpretar su esencia desde una perspectiva actual. Cada decisión de diseño responde a la intención de crear una tipografía con identidad propia, capaz de transmitir el carácter ornamental de la referencia original sin renunciar a la claridad, la versatilidad y la legibilidad en aplicaciones contemporáneas.</p>
+</section>
+
+<!-- ---------- VIDEO FINAL ---------- -->
+<div class="closing-video reveal">
+  <div class="closing-video-inner">
+    <video autoplay muted loop playsinline poster="PARIS/pliego-01.jpg">
+      <source src="PARIS/paris.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&#10005;</button>
+  <button class="lightbox-arrow prev" id="lightboxPrev">&#8592;</button>
+  <div class="lightbox-content" id="lightboxContent"></div>
+  <button class="lightbox-arrow next" id="lightboxNext">&#8594;</button>
+  <div class="lightbox-index" id="lightboxIndex"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-info">
+    <span class="footer-name">Irene Moreno</span>
+    <a href="mailto:imorenov@eina.cat">imorenov@eina.cat</a>
+    <a href="https://www.instagram.com/ireneemooreno/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/irene-moreno-8a5bb12a5/" target="_blank" rel="noopener">Linkedin</a>
+  </div>
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba">↑</button>
+</footer>
+
+<div class="cursor-label" id="cursorLabel">Ver</div>
+
+<script>
+(function(){
+  const TOTAL = 17;
+  const pliegos = [];
+  for (let i=1; i<=TOTAL; i++){
+    pliegos.push(`PARIS/pliego-${String(i).padStart(2,'0')}.jpg`);
+  }
+
+  const grid = document.getElementById('pliegosGrid');
+  const cursorLabel = document.getElementById('cursorLabel');
+
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if (entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  pliegos.forEach((src, i)=>{
+    const item = document.createElement('div');
+    item.className = 'pliego-item';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Pliego ${i+1} — Paris Font`;
+    img.loading = 'lazy';
+    item.appendChild(img);
+    item.addEventListener('mouseenter', ()=>{
+      cursorLabel.textContent = 'Ver';
+      cursorLabel.classList.add('show');
+    });
+    item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+    item.addEventListener('click', ()=> openLightbox(i));
+    grid.appendChild(item);
+  });
+
+  document.addEventListener('mousemove', e=>{
+    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
+  });
+
+  document.querySelectorAll('.reveal').forEach(el=> observer.observe(el));
+
+  // ---------- LIGHTBOX with prev/next ----------
+  const lightbox = document.getElementById('lightbox');
+  const lightboxContent = document.getElementById('lightboxContent');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+  const lightboxIndex = document.getElementById('lightboxIndex');
+  let current = 0;
+
+  function renderLightbox(){
+    lightboxContent.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = pliegos[current];
+    img.alt = `Pliego ${current+1} — Paris Font`;
+    lightboxContent.appendChild(img);
+    lightboxIndex.textContent = `${current+1} / ${pliegos.length}`;
+  }
+  function openLightbox(i){
+    current = i;
+    renderLightbox();
+    lightbox.classList.add('open');
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    lightboxContent.innerHTML = '';
+  }
+  function step(delta){
+    current = (current + delta + pliegos.length) % pliegos.length;
+    renderLightbox();
+  }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click', ()=> step(-1));
+  lightboxNext.addEventListener('click', ()=> step(1));
+  lightbox.addEventListener('click', e=>{ if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e=>{
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+
+  // ---------- BACK TO TOP ----------
+  document.getElementById('backToTop').addEventListener('click', ()=>{
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+})();
+</script>
+
+</body>
+</html>
