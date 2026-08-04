@@ -149,11 +149,10 @@
   }
   .cursor-label.show{ opacity:1; }
 
-  /* ---------- MOTION GRID (free, respects aspect ratio) ---------- */
+  /* ---------- MOTION GRID (grid cells, always at least 2 per row, never overlap) ---------- */
   .motion-grid{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:flex-start;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
     gap:28px;
     max-width:1600px;
     margin:0 auto;
@@ -161,21 +160,21 @@
   }
   .motion-item{
     position:relative;
-    height:340px;
+    aspect-ratio:3/4;
     overflow:hidden;
     background:#0B0B0C;
     cursor:none;
   }
   .motion-item video{
-    height:100%; width:auto;
+    width:100%; height:100%;
+    object-fit:cover;
     display:block;
     transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
   }
   .motion-item:hover video{ transform:scale(1.04); }
 
   @media (max-width:700px){
-    .motion-grid{ padding:20px 20px 100px; gap:16px; }
-    .motion-item{ height:220px; }
+    .motion-grid{ grid-template-columns:repeat(2,1fr); padding:20px 20px 100px; gap:12px; }
   }
 
   /* ---------- LIGHTBOX ---------- */
