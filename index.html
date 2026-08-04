@@ -125,7 +125,7 @@
   }
 
   .proj-label{
-    position:absolute;
+    position:fixed;
     top:96px;
     left:50%;
     transform:translateX(-50%);
@@ -884,6 +884,14 @@
     const dockT = easeInOutCubic(clamp01((progress - 0.30) / 0.25));
     headline.style.transform = `translateY(${-40*dockT}vh) scale(${1 - 0.64*dockT})`;
     if (headlineSub) headlineSub.style.opacity = 1 - dockT;
+
+    // keep the "Proyectos seleccionados" label glued just below the headline's
+    // actual (scaled, docked) bottom edge instead of a fixed pixel guess, since
+    // that guess overlapped the headline text at some viewport heights
+    if (projLabel){
+      const headlineBottom = headline.getBoundingClientRect().bottom;
+      projLabel.style.top = Math.max(96, headlineBottom + 20) + 'px';
+    }
 
     // on mobile the settled grid can reach further down than on desktop, so
     // fade the scroll hint out early instead of letting it sit on top of it
