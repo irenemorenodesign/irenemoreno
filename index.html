@@ -343,6 +343,7 @@
   @media (max-width:900px){
     .preview{ display:none; }
     .cats{ width:100%; }
+    .cats-wrap{ min-height:auto; margin-bottom:24px; }
   }
 
   /* ---------- GALLERY ---------- */
@@ -376,6 +377,12 @@
   .card.filtering-out{
     opacity:0;
     transform:translateY(14px);
+  }
+
+  @media (max-width:900px){
+    .gallery-viewport{ margin:32px 0 40px; }
+    .gallery-track{ padding-left:24px; }
+    .card{ width:clamp(150px, 42vw, 220px); margin-right:20px; }
   }
 
   .card-img{
@@ -759,6 +766,7 @@
   const headline = document.querySelector('.headline');
   const headlineSub = document.querySelector('.headline .sub');
   const projLabel = document.querySelector('.proj-label');
+  const scrollHint = document.querySelector('.scroll-hint');
 
   // Per-piece choreography, one entry per .scrap in DOM order.
   // "chaos": where it lands when it converges into the pile below the headline.
@@ -804,11 +812,11 @@
     const opacity = progress < 0.05 ? progress/0.05 : 1;
 
     // on narrow screens the fixed-px covers are wide relative to the viewport,
-    // so shrink them and widen the column pitch to keep the settled grid from
-    // overlapping itself or running off the edge
+    // so shrink them enough that the same column pitch (in vw) keeps every
+    // column fully on-screen instead of running off the left/right edge
     const isMobile = window.innerWidth < 700;
-    const mobileScale = isMobile ? 0.58 : 1;
-    const colW = isMobile ? 46 : COL_W;
+    const mobileScale = isMobile ? 0.45 : 1;
+    const colW = COL_W;
 
     scraps.forEach((el, i)=>{
       const p = pieces[i];
@@ -841,6 +849,12 @@
     const dockT = easeInOutCubic(clamp01((progress - 0.30) / 0.25));
     headline.style.transform = `translateY(${-40*dockT}vh) scale(${1 - 0.64*dockT})`;
     if (headlineSub) headlineSub.style.opacity = 1 - dockT;
+
+    // on mobile the settled grid can reach further down than on desktop, so
+    // fade the scroll hint out early instead of letting it sit on top of it
+    if (isMobile && scrollHint){
+      scrollHint.style.opacity = 1 - clamp01(progress / 0.08);
+    }
 
     // "Proyectos seleccionados" label fades in once the headline is docked
     const labelOpacity = clamp01((progress - 0.5) / 0.2);
