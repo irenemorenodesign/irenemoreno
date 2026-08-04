@@ -149,32 +149,38 @@
   }
   .cursor-label.show{ opacity:1; }
 
-  /* ---------- MOTION GRID (grid columns, real aspect ratio kept, never overlap) ---------- */
+  /* ---------- MOTION GRID (grouped by orientation, uniform cells, nothing cropped) ---------- */
+  .motion-groups{ max-width:1600px; margin:0 auto; padding:0 64px 160px; }
   .motion-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-    align-items:start;
     gap:28px;
-    max-width:1600px;
-    margin:0 auto;
-    padding:0 64px 160px;
   }
+  .motion-grid + .motion-grid{ margin-top:28px; }
+  .motion-grid-vertical{ grid-template-columns:repeat(3,1fr); }
+  .motion-grid-horizontal{ grid-template-columns:repeat(2,1fr); }
   .motion-item{
     position:relative;
     overflow:hidden;
     background:#0B0B0C;
     cursor:none;
   }
+  .motion-grid-vertical .motion-item{ aspect-ratio:3/4; }
+  .motion-grid-horizontal .motion-item{ aspect-ratio:16/9; }
   .motion-item video{
-    width:100%; height:auto;
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:contain;
     display:block;
     transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
   }
   .motion-item:hover video{ transform:scale(1.04); }
-  .motion-item-featured{ grid-column:span 2; }
 
   @media (max-width:700px){
-    .motion-grid{ grid-template-columns:repeat(2,1fr); padding:20px 20px 100px; gap:12px; }
+    .motion-groups{ padding:20px 20px 100px; }
+    .motion-grid{ gap:12px; }
+    .motion-grid + .motion-grid{ margin-top:12px; }
+    .motion-grid-vertical{ grid-template-columns:repeat(2,1fr); }
+    .motion-grid-horizontal{ grid-template-columns:repeat(2,1fr); }
   }
 
   /* ---------- LIGHTBOX ---------- */
@@ -272,7 +278,10 @@
 </section>
 
 <!-- ---------- GALLERY ---------- -->
-<section class="motion-grid" id="motionGrid"></section>
+<div class="motion-groups">
+  <section class="motion-grid motion-grid-vertical" id="motionGridVertical"></section>
+  <section class="motion-grid motion-grid-horizontal" id="motionGridHorizontal"></section>
+</div>
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose">&#10005;</button>
@@ -294,7 +303,7 @@
 <script>
 (function(){
   const videos = [
-    { src:"MOTION/quinacalor!.mp4",         poster:"MOTION/poster-quinacalor.jpg", title:"Quina calor!", featured:true },
+    { src:"MOTION/quinacalor!.mp4",         poster:"MOTION/poster-quinacalor.jpg", title:"Quina calor!" },
     { src:"MOTION/SAOKO_IreneMoreno.mp4",   poster:"MOTION/poster-saoko.jpg",      title:"Saoko" },
     { src:"MOTION/Comp 16_1.mp4",           poster:"MOTION/poster-comp16.jpg",     title:"Comp 16" },
     { src:"MOTION/chinchin.mp4",            poster:"MOTION/poster-chinchin.jpg",   title:"Chinchín" },
@@ -304,7 +313,8 @@
     { src:"MOTION/Comp 17 (1).mp4",         poster:"MOTION/poster-comp17.jpg",     title:"Comp 17" },
   ];
 
-  const grid = document.getElementById('motionGrid');
+  const gridVertical = document.getElementById('motionGridVertical');
+  const gridHorizontal = document.getElementById('motionGridHorizontal');
   const previewImg = document.getElementById('ghPreviewImg');
   const cursorLabel = document.getElementById('cursorLabel');
   const observer = new IntersectionObserver((entries)=>{
@@ -316,27 +326,40 @@
     });
   }, { threshold: 0.1 });
 
-  videos.forEach(v=>{
-    const item = document.createElement('div');
-    item.className = 'motion-item reveal' + (v.featured ? ' motion-item-featured' : '');
-    const video = document.createElement('video');
-    video.src = v.src;
-    video.poster = v.poster;
-    video.autoplay = true;
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.setAttribute('aria-label', v.title);
-    item.appendChild(video);
-    item.addEventListener('mouseenter', ()=>{
-      previewImg.classList.remove('show');
-      setTimeout(()=>{ previewImg.src = v.poster; previewImg.classList.add('show'); }, 120);
-      cursorLabel.classList.add('show');
+  // Probe each clip's real dimensions first, so verticals and horizontals can be
+  // grouped into their own grids instead of mixing wildly different aspect ratios.
+  Promise.all(videos.map(v=>{
+    return new Promise(resolve=>{
+      const probe = document.createElement('video');
+      probe.preload = 'metadata';
+      probe.muted = true;
+      probe.onloadedmetadata = ()=> resolve({ v, portrait: probe.videoHeight >= probe.videoWidth });
+      probe.onerror = ()=> resolve({ v, portrait: false });
+      probe.src = v.src;
     });
-    item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
-    item.addEventListener('click', ()=> openLightbox(v));
-    grid.appendChild(item);
-    observer.observe(item);
+  })).then(results=>{
+    results.forEach(({ v, portrait })=>{
+      const item = document.createElement('div');
+      item.className = 'motion-item reveal';
+      const video = document.createElement('video');
+      video.src = v.src;
+      video.poster = v.poster;
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute('aria-label', v.title);
+      item.appendChild(video);
+      item.addEventListener('mouseenter', ()=>{
+        previewImg.classList.remove('show');
+        setTimeout(()=>{ previewImg.src = v.poster; previewImg.classList.add('show'); }, 120);
+        cursorLabel.classList.add('show');
+      });
+      item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+      item.addEventListener('click', ()=> openLightbox(v));
+      (portrait ? gridVertical : gridHorizontal).appendChild(item);
+      observer.observe(item);
+    });
   });
 
   document.addEventListener('mousemove', e=>{
