@@ -342,21 +342,18 @@
     right:0;
     top:0;
     width:min(30vw, 380px);
-    aspect-ratio:3/4;
     pointer-events:none;
   }
-  .preview img{
+  .preview img, .preview video{
     position:absolute;
-    inset:0;
+    top:0; left:0;
     width:100%;
-    height:100%;
-    object-fit:cover;
+    height:auto;
     opacity:0;
-    box-shadow:0 30px 60px rgba(0,0,0,0.16);
     transform:translateY(28px) rotate(0deg);
     transition:opacity 0.55s cubic-bezier(.22,.8,.32,1), transform 0.6s cubic-bezier(.22,1.1,.32,1);
   }
-  .preview img.show{
+  .preview img.show, .preview video.show{
     opacity:1;
   }
 
@@ -708,7 +705,7 @@
       <li data-cat="MOTION">MOTION</li>
       <li data-cat="POSTERS">POSTERS</li>
     </ul>
-    <div class="preview"><img id="previewImg" src="" alt=""></div>
+    <div class="preview"><img id="previewImg" src="" alt=""><video id="previewVideo" muted loop playsinline></video></div>
   </div>
 
   <div class="gallery-viewport" id="galleryViewport">
@@ -961,6 +958,7 @@
   const catsEl = document.getElementById('cats');
   const catItems = [...catsEl.querySelectorAll('li')];
   const previewImg = document.getElementById('previewImg');
+  const previewVideo = document.getElementById('previewVideo');
   let activeCat = 'ALL';
   let lastShownSeed = null;
 
@@ -987,14 +985,25 @@
     lastShownSeed = pick.title;
     const rot = (Math.random()*12 - 6).toFixed(1);
 
-    previewImg.classList.remove('show');
-    previewImg.style.transform = `translateY(28px) rotate(${rot}deg)`;
+    // Motion pieces autoplay their real clip in the preview instead of a static poster
+    const showEl = pick.video ? previewVideo : previewImg;
+    const hideEl = pick.video ? previewImg : previewVideo;
+
+    hideEl.classList.remove('show');
+    previewVideo.pause();
+    showEl.classList.remove('show');
+    showEl.style.transform = `translateY(28px) rotate(${rot}deg)`;
     // force reflow so the next class add re-triggers the transition
-    void previewImg.offsetWidth;
-    previewImg.src = imgFor(pick, 520, 700);
+    void showEl.offsetWidth;
+    if (pick.video){
+      previewVideo.src = pick.video;
+      previewVideo.play().catch(()=>{});
+    } else {
+      previewImg.src = imgFor(pick, 520, 700);
+    }
     requestAnimationFrame(()=>{
-      previewImg.classList.add('show');
-      previewImg.style.transform = `translateY(0px) rotate(${rot}deg)`;
+      showEl.classList.add('show');
+      showEl.style.transform = `translateY(0px) rotate(${rot}deg)`;
     });
   }
 
