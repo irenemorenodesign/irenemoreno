@@ -855,8 +855,14 @@
     // 40vh of row spacing reads fine on a wide, short desktop viewport, but on a
     // tall narrow phone (now with an extra row, since mobile is 2x3 not 3x2) it
     // leaves a huge dead gap between rows if left as-is — tighten it, but leave
-    // enough that a row's caption never runs into the row below
-    const rowH = isMobile ? 25 : ROW_H;
+    // enough that a row's caption never runs into the row below.
+    // Scrap sizes are fixed px (not vh-scaled), so a vh-based rowH shrinks in real
+    // pixels on shorter phones while the pieces stay the same size — tall portrait
+    // pieces (Paris Font, Motion) then poke into the row below. Pin mobile row
+    // spacing to a constant pixel gap instead, converted to vh at runtime, so the
+    // clearance that works on a tall phone also holds on a short one.
+    const MOBILE_ROW_GAP_PX = 203;
+    const rowH = isMobile ? (MOBILE_ROW_GAP_PX / window.innerHeight) * 100 : ROW_H;
 
     scraps.forEach((el, i)=>{
       const p = pieces[i];
