@@ -406,6 +406,7 @@
   }
 
   .card-img{
+    position:relative;
     aspect-ratio:4/5;
     overflow:hidden;
     background:#efefec;
@@ -416,6 +417,15 @@
     display:block;
     transition:transform 0.8s cubic-bezier(.22,.8,.32,1);
   }
+  .card-img video{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 0.35s ease;
+    pointer-events:none;
+  }
+  .card-img video.show{ opacity:1; }
   .card:hover .card-img img{ transform:scale(1.06); }
   .card:hover .card-img{ transform:translateY(-6px); }
   .card-img{ transition:transform 0.5s cubic-bezier(.22,1.1,.32,1); }
@@ -921,14 +931,14 @@
     { title:"Verbena", cat:"EDITORIAL", img:"PORTADAS PROYECTOS/VERBENA_PORTADA.png", link:"proyecto-verbena.html" },
     { title:"Paris Font", cat:"EDITORIAL", img:"PORTADAS PROYECTOS/PARIS_PORTADA.png", link:"proyecto-parisfont.html" },
 
-    { title:"Quina calor!",  cat:"MOTION", img:"MOTION/poster-quinacalor.jpg", link:"motion.html" },
-    { title:"Saoko",         cat:"MOTION", img:"MOTION/poster-saoko.jpg",      link:"motion.html" },
-    { title:"Comp 16",       cat:"MOTION", img:"MOTION/poster-comp16.jpg",     link:"motion.html" },
-    { title:"Chinchín",      cat:"MOTION", img:"MOTION/poster-chinchin.jpg",   link:"motion.html" },
-    { title:"Comp 1.6",      cat:"MOTION", img:"MOTION/poster-comp1_6.jpg",    link:"motion.html" },
-    { title:"Ball",          cat:"MOTION", img:"MOTION/poster-ball2.jpg",      link:"motion.html" },
-    { title:"Tipo 11",       cat:"MOTION", img:"MOTION/poster-tipo11.jpg",     link:"motion.html" },
-    { title:"Comp 17",       cat:"MOTION", img:"MOTION/poster-comp17.jpg",     link:"motion.html" },
+    { title:"Quina calor!",  cat:"MOTION", img:"MOTION/poster-quinacalor.jpg", video:"MOTION/quinacalor!.mp4",       link:"motion.html" },
+    { title:"Saoko",         cat:"MOTION", img:"MOTION/poster-saoko.jpg",      video:"MOTION/SAOKO_IreneMoreno.mp4", link:"motion.html" },
+    { title:"Comp 16",       cat:"MOTION", img:"MOTION/poster-comp16.jpg",     video:"MOTION/Comp 16_1.mp4",         link:"motion.html" },
+    { title:"Chinchín",      cat:"MOTION", img:"MOTION/poster-chinchin.jpg",   video:"MOTION/chinchin.mp4",          link:"motion.html" },
+    { title:"Comp 1.6",      cat:"MOTION", img:"MOTION/poster-comp1_6.jpg",    video:"MOTION/Comp 1_6.mp4",          link:"motion.html" },
+    { title:"Ball",          cat:"MOTION", img:"MOTION/poster-ball2.jpg",      video:"MOTION/ball_2.mp4",            link:"motion.html" },
+    { title:"Tipo 11",       cat:"MOTION", img:"MOTION/poster-tipo11.jpg",     video:"MOTION/tipo11.mp4",            link:"motion.html" },
+    { title:"Comp 17",       cat:"MOTION", img:"MOTION/poster-comp17.jpg",     video:"MOTION/Comp 17 (1).mp4",       link:"motion.html" },
 
     { title:"Elige tu propia aventura", cat:"POSTERS", img:"POSTERS/PORTADA WORK:PROYECTOS.jpg", link:"posters.html" },
     { title:"Almost Forgot",            cat:"POSTERS", img:"POSTERS/funn.jpg", link:"posters.html" },
@@ -1033,6 +1043,28 @@
             <span class="cat">${p.cat}</span>
           </div>`;
         card.addEventListener('click', ()=> p.link ? (location.href = p.link) : openProject(p, card));
+
+        // Motion pieces: play the real clip on hover instead of a static poster
+        if (p.video){
+          const cardImg = card.querySelector('.card-img');
+          const video = document.createElement('video');
+          video.src = p.video;
+          video.muted = true;
+          video.loop = true;
+          video.playsInline = true;
+          video.preload = 'none';
+          cardImg.appendChild(video);
+          card.addEventListener('mouseenter', ()=>{
+            video.currentTime = 0;
+            video.play().catch(()=>{});
+            video.classList.add('show');
+          });
+          card.addEventListener('mouseleave', ()=>{
+            video.classList.remove('show');
+            video.pause();
+          });
+        }
+
         track.appendChild(card);
       });
     }
