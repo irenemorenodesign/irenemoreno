@@ -342,12 +342,15 @@
     right:0;
     top:0;
     width:min(30vw, 380px);
+    max-height:52vh;
     pointer-events:none;
   }
   .preview img, .preview video{
     position:absolute;
-    top:0; left:0;
-    width:100%;
+    top:0; right:0;
+    max-width:100%;
+    width:auto;
+    max-height:52vh;
     height:auto;
     opacity:0;
     transform:translateY(28px) rotate(0deg);
