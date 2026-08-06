@@ -153,30 +153,33 @@
   .cursor-label.show{ opacity:1; }
 
   /* ---------- PLIEGOS GRID ---------- */
+  /* justified-gallery layout: every item shares one row height and keeps its
+     own natural aspect ratio (no cropping), so portrait pages (cover/closing)
+     just sit narrower and flush against their neighbours — no dead gap */
   .pliegos-grid{
-    display:grid;
-    grid-template-columns:repeat(7, 1fr);
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-start;
     gap:10px;
     max-width:1500px;
     margin:0 auto;
     padding:0 40px 40px;
   }
   .pliego-item{
-    aspect-ratio:419.5/595.3;
+    height:116px;
     overflow:hidden;
     background:#fff;
     cursor:none;
   }
   .pliego-item img{
-    width:100%; height:100%;
-    object-fit:cover;
+    height:100%; width:auto;
     display:block;
     transition:transform 0.5s cubic-bezier(.22,.8,.32,1);
   }
   .pliego-item:hover img{ transform:scale(1.05); }
 
-  @media (max-width:1000px){ .pliegos-grid{ grid-template-columns:repeat(4,1fr); } }
-  @media (max-width:600px){ .pliegos-grid{ grid-template-columns:repeat(3,1fr); gap:6px; padding:0 16px 24px; } }
+  @media (max-width:1000px){ .pliego-item{ height:170px; } }
+  @media (max-width:600px){ .pliegos-grid{ gap:6px; padding:0 16px 24px; } .pliego-item{ height:110px; } }
 
   /* ---------- NARROW TEXT ---------- */
   .narrow-text{

@@ -196,6 +196,71 @@
   }
   .cursor-label.show{ opacity:1; }
 
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.96);
+    display:flex; align-items:center; justify-content:center;
+    z-index:900;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.35s ease;
+    padding:60px;
+  }
+  .lightbox.open{ opacity:1; pointer-events:auto; }
+  .lightbox-content{
+    max-width:82vw; max-height:88vh;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lightbox-content img{
+    max-width:82vw; max-height:88vh;
+    width:auto; height:auto;
+    display:block;
+    box-shadow:0 40px 100px rgba(0,0,0,0.6);
+  }
+  .lightbox-close{
+    position:fixed;
+    top:32px; right:40px;
+    width:44px; height:44px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease;
+    z-index:901;
+  }
+  .lightbox-close:hover{ background:rgba(255,255,255,0.18); }
+  .lightbox-arrow{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    width:52px; height:52px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.08);
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.2s ease;
+    z-index:901;
+  }
+  .lightbox-arrow:hover{ background:rgba(255,255,255,0.18); }
+  .lightbox-arrow.prev{ left:32px; }
+  .lightbox-arrow.next{ right:32px; }
+  .lightbox-index{
+    position:fixed;
+    bottom:32px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12px;
+    letter-spacing:0.08em;
+    color:rgba(255,255,255,0.6);
+    z-index:901;
+  }
+
   /* ---------- NARROW TEXT ---------- */
   .narrow-text{
     max-width:480px;
@@ -442,6 +507,14 @@
 
 <div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
 
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&#10005;</button>
+  <button class="lightbox-arrow prev" id="lightboxPrev">&#8592;</button>
+  <div class="lightbox-content" id="lightboxContent"></div>
+  <button class="lightbox-arrow next" id="lightboxNext">&#8594;</button>
+  <div class="lightbox-index" id="lightboxIndex"></div>
+</div>
+
 <script>
 (function(){
   // ---------- BUILD MOSAIC GALLERY (shortest-column masonry) ----------
@@ -483,7 +556,7 @@
         cols.push(col);
         colHeights.push(0);
       }
-      items.forEach(({n, src, ratio})=>{
+      items.forEach(({n, src, ratio}, i)=>{
         let target = 0;
         for (let c = 1; c < colCount; c++) if (colHeights[c] < colHeights[target]) target = c;
         const item = document.createElement('div');
@@ -498,9 +571,53 @@
         observer.observe(item);
         item.addEventListener('mouseenter', ()=> cursorLabel.classList.add('show'));
         item.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
+        item.addEventListener('click', ()=> openLightbox(i));
       });
     }
     layout();
+
+    // ---------- LIGHTBOX with prev/next ----------
+    const lightbox = document.getElementById('lightbox');
+    const lightboxContent = document.getElementById('lightboxContent');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxIndex = document.getElementById('lightboxIndex');
+    let current = 0;
+
+    function renderLightbox(){
+      lightboxContent.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = items[current].src;
+      img.alt = items[current].n === '' ? 'Portada — Revista Verbena' : ('Página ' + items[current].n + ' — Revista Verbena');
+      lightboxContent.appendChild(img);
+      lightboxIndex.textContent = `${current+1} / ${items.length}`;
+    }
+    function openLightbox(i){
+      current = i;
+      renderLightbox();
+      lightbox.classList.add('open');
+      cursorLabel.classList.remove('show');
+    }
+    function closeLightbox(){
+      lightbox.classList.remove('open');
+      lightboxContent.innerHTML = '';
+    }
+    function step(delta){
+      current = (current + delta + items.length) % items.length;
+      renderLightbox();
+    }
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', ()=> step(-1));
+    lightboxNext.addEventListener('click', ()=> step(1));
+    lightbox.addEventListener('click', e=>{ if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e=>{
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+
     let resizeTimer;
     window.addEventListener('resize', ()=>{
       clearTimeout(resizeTimer);
