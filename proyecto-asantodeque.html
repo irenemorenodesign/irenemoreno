@@ -132,7 +132,6 @@
     aspect-ratio:3/4;
     background:#000000;
     overflow:hidden;
-    cursor:none;
   }
   .hero-media img{
     width:100%;
@@ -149,7 +148,7 @@
   }
 
   /* ---------- FULL-BLEED BLOCKS ---------- */
-  .full-block{ width:100%; overflow:hidden; cursor:none; }
+  .full-block{ width:100%; overflow:hidden; }
   .full-block img{
     width:100%; display:block;
     transition:transform 0.6s cubic-bezier(.22,.8,.32,1);
@@ -199,26 +198,6 @@
     .map-section{ grid-template-columns:1fr; gap:48px; padding:100px 24px; }
   }
 
-  /* ---------- CURSOR LABEL ---------- */
-  .cursor-label{
-    position:fixed;
-    top:0; left:0;
-    transform:translate(-9999px,-9999px);
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    background:var(--ink);
-    color:#fff;
-    padding:9px 18px;
-    border-radius:100px;
-    pointer-events:none;
-    z-index:600;
-    opacity:0;
-    transition:opacity 0.25s ease;
-    white-space:nowrap;
-  }
-  .cursor-label.show{ opacity:1; }
-
   /* ---------- HORIZONTAL CAROUSEL ---------- */
   .hcarousel{ position:relative; padding:0 0 0; }
   .hcarousel-viewport{
@@ -242,7 +221,6 @@
     scroll-snap-align:center;
     flex:0 0 auto;
     overflow:hidden;
-    cursor:none;
   }
   .hcarousel-track .slide img{
     height:100%;
@@ -564,21 +542,8 @@
   <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
-
 <script>
 (function(){
-  // ---------- CURSOR LABEL ----------
-  const cursorLabel = document.getElementById('cursorLabel');
-  let cursorDefaultText = 'Ver';
-  document.addEventListener('mousemove', e=>{
-    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
-  });
-  document.querySelectorAll('.hero-media, .full-block, .hcarousel-track .slide').forEach(el=>{
-    el.addEventListener('mouseenter', ()=>{ cursorLabel.classList.add('show'); });
-    el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
-  });
-
   // ---------- SCROLL REVEAL ----------
   const observer = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{

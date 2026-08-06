@@ -132,7 +132,6 @@
     aspect-ratio:1136/872;
     background:#FEE100;
     overflow:hidden;
-    cursor:none;
   }
   .hero-media img{
     width:100%;
@@ -152,7 +151,6 @@
   .full-block{
     width:100%;
     overflow:hidden;
-    cursor:none;
   }
   .full-block img{
     width:100%;
@@ -170,7 +168,6 @@
     flex:1 1 0;
     min-width:0;
     overflow:hidden;
-    cursor:none;
   }
   .trio-block img{
     width:100%;
@@ -182,26 +179,6 @@
   @media (max-width:700px){
     .trio-block{ flex-direction:column; }
   }
-
-  /* ---------- CURSOR LABEL ---------- */
-  .cursor-label{
-    position:fixed;
-    top:0; left:0;
-    transform:translate(-9999px,-9999px);
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    background:var(--ink);
-    color:#fff;
-    padding:9px 18px;
-    border-radius:100px;
-    pointer-events:none;
-    z-index:600;
-    opacity:0;
-    transition:opacity 0.25s ease;
-    white-space:nowrap;
-  }
-  .cursor-label.show{ opacity:1; }
 
   /* ---------- NEXT PROJECT ---------- */
   .next-project{
@@ -375,20 +352,8 @@
   <button class="back-to-top" id="backToTop" aria-label="Volver arriba" title="Volver arriba" data-i18n-attr="aria-label:proj.backToTop;title:proj.backToTop">↑</button>
 </footer>
 
-<div class="cursor-label" id="cursorLabel" data-i18n="proj.view">Ver</div>
-
 <script>
 (function(){
-  // ---------- CURSOR LABEL "VER" ----------
-  const cursorLabel = document.getElementById('cursorLabel');
-  document.addEventListener('mousemove', e=>{
-    cursorLabel.style.transform = `translate(${e.clientX + 18}px, ${e.clientY + 18}px)`;
-  });
-  document.querySelectorAll('.hero-media, .full-block, .trio-block > div').forEach(el=>{
-    el.addEventListener('mouseenter', ()=> cursorLabel.classList.add('show'));
-    el.addEventListener('mouseleave', ()=> cursorLabel.classList.remove('show'));
-  });
-
   // ---------- SCROLL REVEAL ----------
   const observer = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{

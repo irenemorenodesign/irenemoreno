@@ -128,7 +128,6 @@
     aspect-ratio:1136/872;
     background:#FFFFFF;
     overflow:hidden;
-    box-shadow:0 30px 70px rgba(0,0,0,0.10);
   }
   .hero-media video{
     width:100%;
@@ -269,64 +268,6 @@
   }
   @media (max-width:800px){
     .block-composition{ grid-template-columns:1fr; }
-  }
-
-  /* ---------- HORIZONTAL CAROUSEL ---------- */
-  .hcarousel{
-    position:relative;
-  }
-  .hcarousel-viewport{
-    overflow-x:auto;
-    overflow-y:hidden;
-    scroll-snap-type:x proximity;
-    cursor:grab;
-    -ms-overflow-style:none;
-    scrollbar-width:none;
-  }
-  .hcarousel-viewport::-webkit-scrollbar{ display:none; }
-  .hcarousel-viewport.grabbing{ cursor:grabbing; }
-  .hcarousel-track{
-    display:flex;
-    gap:32px;
-    width:max-content;
-    padding:0 64px;
-  }
-  .hcarousel-track .slide{
-    height:min(62vh, 560px);
-    scroll-snap-align:center;
-    flex:0 0 auto;
-  }
-  .hcarousel-track .slide img{
-    height:100%;
-    width:auto;
-    max-width:none;
-    user-select:none;
-    -webkit-user-drag:none;
-  }
-  .hcarousel-arrow{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:44px; height:44px;
-    border-radius:50%;
-    border:1px solid var(--line);
-    background:rgba(255,255,255,0.85);
-    backdrop-filter:blur(4px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-size:16px;
-    color:var(--ink);
-    z-index:10;
-    transition:background 0.2s ease, border-color 0.2s ease;
-  }
-  .hcarousel-arrow:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
-  .hcarousel-arrow.prev{ left:20px; }
-  .hcarousel-arrow.next{ right:20px; }
-  @media (max-width:700px){
-    .hcarousel-arrow{ display:none; }
-    .hcarousel-track{ padding:0 20px; }
   }
 
   /* ---------- NEXT PROJECT ---------- */
@@ -472,15 +413,6 @@
     <img src="VERBENA/Free A4 Magazine Mockup.png" alt="Mockup de la portada de Verbena">
   </div>
 
-  <div class="hcarousel reveal">
-    <button class="hcarousel-arrow prev" aria-label="Anterior" data-i18n-attr="aria-label:carousel.prev">&#8592;</button>
-    <div class="hcarousel-viewport" id="hcarouselViewport">
-      <div class="hcarousel-track" id="hcarouselTrack"></div>
-    </div>
-    <button class="hcarousel-arrow next" aria-label="Siguiente" data-i18n-attr="aria-label:carousel.next">&#8594;</button>
-  </div>
-  <p class="block-caption" style="margin-top:32px;" data-i18n="verbena.caption1">El recorrido empieza con la Semana Santa de Sevilla, donde el silencio y la puesta en escena barroca crean una celebración llena de carga emocional. En Madrid, San Isidro mezcla devoción y tradición popular entre mantones y chulapos.</p>
-
   <div class="block-image reveal">
     <img src="VERBENA/j.png" alt="Mockup abierto de la revista Verbena">
   </div>
@@ -576,21 +508,6 @@
     });
   });
 
-  // ---------- BUILD HORIZONTAL CAROUSEL ----------
-  const track = document.getElementById('hcarouselTrack');
-  const highlights = [5, 10, 14, 20, 23, 33];
-  highlights.forEach(n=>{
-    const slide = document.createElement('div');
-    slide.className = 'slide';
-    const img = document.createElement('img');
-    img.src = base + n + '.jpg';
-    img.alt = 'Página ' + n + ' — Revista Verbena';
-    img.draggable = false;
-    img.loading = 'lazy';
-    slide.appendChild(img);
-    track.appendChild(slide);
-  });
-
   // ---------- CURSOR LABEL "VER" ----------
   const cursorLabel = document.getElementById('cursorLabel');
   document.addEventListener('mousemove', e=>{
@@ -612,37 +529,6 @@
   // ---------- VIDEO FADE-IN ON LOAD ----------
   document.querySelectorAll('video').forEach(v=>{
     v.addEventListener('loadeddata', ()=> v.classList.add('loaded'));
-  });
-
-  // ---------- HORIZONTAL CAROUSEL: drag + arrows ----------
-  const viewport = document.getElementById('hcarouselViewport');
-  let dragging = false, startX = 0, startScroll = 0, moved = false;
-
-  viewport.addEventListener('pointerdown', e=>{
-    dragging = true; moved = false;
-    startX = e.clientX;
-    startScroll = viewport.scrollLeft;
-    viewport.classList.add('grabbing');
-    viewport.setPointerCapture(e.pointerId);
-  });
-  viewport.addEventListener('pointermove', e=>{
-    if (!dragging) return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 4) moved = true;
-    viewport.scrollLeft = startScroll - dx;
-  });
-  function endDrag(){
-    dragging = false;
-    viewport.classList.remove('grabbing');
-  }
-  viewport.addEventListener('pointerup', endDrag);
-  viewport.addEventListener('pointerleave', endDrag);
-
-  document.querySelector('.hcarousel-arrow.prev').addEventListener('click', ()=>{
-    viewport.scrollBy({ left: -420, behavior:'smooth' });
-  });
-  document.querySelector('.hcarousel-arrow.next').addEventListener('click', ()=>{
-    viewport.scrollBy({ left: 420, behavior:'smooth' });
   });
 
   // ---------- NEXT PROJECT: expand transition before navigating ----------
